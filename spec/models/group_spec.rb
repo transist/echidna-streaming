@@ -6,10 +6,21 @@ describe Group do
     $redis.flushdb
   end
 
+  context "#save" do
+    before do
+      Group.new({"id" => "group-1", "name" => "Group 1"}).save
+    end
+
+    it "should save group attributes" do
+      attributes = $redis.hgetall "groups:group-1"
+      expect(attributes).to eq({"name" => "Group 1"})
+    end
+  end
+
   context "#add_user" do
     before do
       @user = User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"})
-      Group.new({"name" => "group-1"}).add_user @user
+      Group.new({"id" => "group-1", "name" => "Group 1"}).add_user @user
     end
 
     it "should add a user" do
@@ -22,13 +33,13 @@ describe Group do
   end
 
   context "#key" do
-    subject { Group.new({"name" => "group-1"}) }
+    subject { Group.new({"id" => "group-1", "name" => "Group 1"}) }
 
     its(:key) { should eq "groups:group-1" }
   end
 
   context "#users_key" do
-    subject { Group.new({"name" => "group-1"}) }
+    subject { Group.new({"id" => "group-1", "name" => "Group 1"}) }
 
     its(:users_key) { should eq "groups:group-1:users" }
   end

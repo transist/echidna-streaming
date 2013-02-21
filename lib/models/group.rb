@@ -1,5 +1,9 @@
 # coding: utf-8
 class Group < Base
+  def save
+    $redis.hmset key, *attributes.except('id').to_a.flatten
+  end
+
   def add_user(user)
     $redis.multi do
       $redis.sadd users_key, user.key
@@ -8,10 +12,10 @@ class Group < Base
   end
 
   def key
-    "groups:#{@attributes['name']}"
+    "groups:#{@attributes['id']}"
   end
 
   def users_key
-    "groups:#{@attributes['name']}:users"
+    "groups:#{@attributes['id']}:users"
   end
 end
