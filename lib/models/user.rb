@@ -4,6 +4,10 @@ class User < Base
     $redis.hmset key, *attributes.except('type', 'id').to_a.flatten
   end
 
+  def group_key
+    $redis.hget key, "group_key"
+  end
+
   def key
     "users:#{@attributes['type']}:#{@attributes['id']}"
   end
