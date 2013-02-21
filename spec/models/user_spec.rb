@@ -8,8 +8,7 @@ describe User do
 
   context "#save" do
     before do
-      @user = User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"})
-      @user.save
+      User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"}).save
     end
 
     it "should save user attributes" do
