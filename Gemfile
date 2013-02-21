@@ -6,3 +6,7 @@ gem 'yajl-ruby', require: 'yajl'
 gem 'multi_json'
 gem 'rmmseg-cpp', require: 'rmmseg'
 gem 'em-synchrony'
+
+group :test do
+  gem 'rspec'
+end

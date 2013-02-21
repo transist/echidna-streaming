@@ -1,7 +1,6 @@
-# encoding: utf-8
+# coding: utf-8
 class User < Base
   def save
-    @store.set "foo", "bar"
-    @store.hmset "users:tw:#{@attributes.delete('id')}", *attributes.to_a.flatten
+    @store.hmset "users:#{@attributes.delete('type')}:#{@attributes.delete('id')}", *attributes.to_a.flatten
   end
 end
