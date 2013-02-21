@@ -1,6 +1,10 @@
 # coding: utf-8
 class User < Base
   def save
-    @store.hmset "users:#{@attributes.delete('type')}:#{@attributes.delete('id')}", *attributes.to_a.flatten
+    $redis.hmset key, *attributes.except('type', 'id').to_a.flatten
+  end
+
+  def key
+    "users:#{@attributes['type']}:#{@attributes['id']}"
   end
 end

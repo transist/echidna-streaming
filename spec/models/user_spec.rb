@@ -8,7 +8,7 @@ describe User do
 
   context "#save" do
     before do
-      @user = User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"}, $redis)
+      @user = User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"})
       @user.save
     end
 
@@ -16,5 +16,11 @@ describe User do
       attributes = $redis.hgetall "users:tecent:1234567890"
       expect(attributes).to eq({"birth_year" => "2000", "gender" => "f", "city" => "shanghai"})
     end
+  end
+
+  context "#key" do
+    subject { User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"}) }
+
+    its(:key) { should eq "users:tecent:1234567890" }
   end
 end
