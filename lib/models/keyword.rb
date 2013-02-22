@@ -2,6 +2,11 @@
 class Keyword < Base
   def save
     $redis.multi do
+      $redis.set minute_source_id_key, @attributes['source_id']
+      $redis.set hour_source_id_key, @attributes['source_id']
+      $redis.set day_source_id_key, @attributes['source_id']
+      $redis.set month_source_id_key, @attributes['source_id']
+      $redis.set year_source_id_key, @attributes['source_id']
       $redis.zadd minute_keywords_key, minute_timestamp, minute_key
       $redis.zadd hour_keywords_key, hour_timestamp, hour_key
       $redis.zadd day_keywords_key, day_timestamp, day_key
@@ -33,6 +38,26 @@ class Keyword < Base
 
   def year_key
     "groups:#{@attributes['group_id']}:year:#{year_timestamp}:#{@attributes['word']}"
+  end
+
+  def minute_source_id_key
+    "groups:#{@attributes['group_id']}:minute:#{minute_timestamp}:#{@attributes['word']}:source_id"
+  end
+
+  def hour_source_id_key
+    "groups:#{@attributes['group_id']}:hour:#{hour_timestamp}:#{@attributes['word']}:source_id"
+  end
+
+  def day_source_id_key
+    "groups:#{@attributes['group_id']}:day:#{day_timestamp}:#{@attributes['word']}:source_id"
+  end
+
+  def month_source_id_key
+    "groups:#{@attributes['group_id']}:month:#{month_timestamp}:#{@attributes['word']}:source_id"
+  end
+
+  def year_source_id_key
+    "groups:#{@attributes['group_id']}:year:#{year_timestamp}:#{@attributes['word']}:source_id"
   end
 
   def minute_keywords_key

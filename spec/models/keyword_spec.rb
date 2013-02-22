@@ -8,7 +8,7 @@ describe Keyword do
 
   context "#save" do
     before do
-      @keyword = Keyword.new({"group_id" => "group-1", "timestamp" => 1361494534, "word" => "中国"})
+      @keyword = Keyword.new({"group_id" => "group-1", "timestamp" => 1361494534, "word" => "中国", "source_id" => "source-1"})
       @keyword.save
     end
 
@@ -27,6 +27,14 @@ describe Keyword do
       expect($redis.get @keyword.month_key).to eq "1"
       expect($redis.get @keyword.year_key).to eq "1"
     end
+
+    it "should set source_id" do
+      expect($redis.get @keyword.minute_source_id_key).to eq "source-1"
+      expect($redis.get @keyword.hour_source_id_key).to eq "source-1"
+      expect($redis.get @keyword.day_source_id_key).to eq "source-1"
+      expect($redis.get @keyword.month_source_id_key).to eq "source-1"
+      expect($redis.get @keyword.year_source_id_key).to eq "source-1"
+    end
   end
 
   context "keys" do
@@ -37,6 +45,11 @@ describe Keyword do
     its(:day_key) { should eq "groups:group-1:day:1361491200:中国" }
     its(:month_key) { should eq "groups:group-1:month:1359676800:中国" }
     its(:year_key) { should eq "groups:group-1:year:1356998400:中国" }
+    its(:minute_source_id_key) { should eq "groups:group-1:minute:1361494500:中国:source_id" }
+    its(:hour_source_id_key) { should eq "groups:group-1:hour:1361491200:中国:source_id" }
+    its(:day_source_id_key) { should eq "groups:group-1:day:1361491200:中国:source_id" }
+    its(:month_source_id_key) { should eq "groups:group-1:month:1359676800:中国:source_id" }
+    its(:year_source_id_key) { should eq "groups:group-1:year:1356998400:中国:source_id" }
     its(:minute_keywords_key) { should eq "groups:group-1:minute:keywords" }
     its(:hour_keywords_key) { should eq "groups:group-1:hour:keywords" }
     its(:day_keywords_key) { should eq "groups:group-1:day:keywords" }

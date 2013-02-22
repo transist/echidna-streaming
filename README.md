@@ -66,26 +66,24 @@ add a user
 
 ```bash
 redis-cli publish add_user '{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}'
-
 ```
 
 add a group
 
 ```bash
 redis-cli publish add_group '{"id":"group-1","name":"Group 1"}'
-
 ```
 
 add user to group
 
 ```bash
-publish add_user_to_group '{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}'
+redis-cli publish add_user_to_group '{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}'
 ```
 
 add tweet
 
 ```bash
-publish add_tweet '{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}'
+redis-cli publish add_tweet '{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}'
 ```
 
 ## Query trends
@@ -101,5 +99,36 @@ query trends
 ```bash
 curl localhost:9000?group_id=group-1&interval=minute&start_timestamp=1361494500&end_timestamp=1361496600
 
-{"1361494500":{"中":5,"国":5,"人":4,"我":4,"是":3},"1361494620":{"中":3,"国":3,"人":2,"我":2,"是":1}}
+{
+  "1361494500":[
+    {"word":"中","count":2,"source":"http://t.qq.com/t/efg"},
+    {"word":"我","count":2,"source":"http://t.qq.com/t/efg"},
+    {"word":"国","count":2,"source":"http://t.qq.com/t/efg"},
+    {"word":"在","count":1,"source":"http://t.qq.com/t/efg"},
+    {"word":"人","count":1,"source":"http://t.qq.com/t/efg"},
+    {"word":"是","count":1,"source":"http://t.qq.com/t/efg"}
+  ],
+  "1361494620":[
+    {"word":"上","count":1,"source":"http://t.qq.com/t/efg"},
+    {"word":"中","count":1,"source":"http://t.qq.com/t/efg"},
+    {"word":"国","count":1,"source":"http://t.qq.com/t/efg"},
+    {"word":"在","count":1,"source":"http://t.qq.com/t/efg"},
+    {"word":"海","count":1,"source":"http://t.qq.com/t/efg"}
+  ]
+}
+
+curl localhost:9000?group_id=group-1&interval=hour&start_timestamp=1361490500&end_timestamp=1361496600
+
+{
+  "1361491200":[
+    {"word":"国","count":3,"source":"http://t.qq.com/t/efg"},
+    {"word":"中","count":3,"source":"http://t.qq.com/t/efg"},
+    {"word":"我","count":2,"source":"http://t.qq.com/t/efg"},
+    {"word":"在","count":2,"source":"http://t.qq.com/t/efg"},
+    {"word":"上","count":1,"source":"http://t.qq.com/t/efg"},
+    {"word":"人","count":1,"source":"http://t.qq.com/t/efg"},
+    {"word":"是","count":1,"source":"http://t.qq.com/t/efg"},
+    {"word":"海","count":1,"source":"http://t.qq.com/t/efg"}
+  ]
+}
 ```
