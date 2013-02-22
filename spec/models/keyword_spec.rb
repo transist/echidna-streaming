@@ -12,6 +12,14 @@ describe Keyword do
       @keyword.save
     end
 
+    it "should add keywords to group sorted set" do
+      expect($redis.zrange @keyword.minute_keywords_key, 0, -1).to be_include @keyword.minute_key
+      expect($redis.zrange @keyword.hour_keywords_key, 0, -1).to be_include @keyword.hour_key
+      expect($redis.zrange @keyword.day_keywords_key, 0, -1).to be_include @keyword.day_key
+      expect($redis.zrange @keyword.month_keywords_key, 0, -1).to be_include @keyword.month_key
+      expect($redis.zrange @keyword.year_keywords_key, 0, -1).to be_include @keyword.year_key
+    end
+
     it "should increment count for all keys" do
       expect($redis.get @keyword.minute_key).to eq "1"
       expect($redis.get @keyword.hour_key).to eq "1"
@@ -29,5 +37,10 @@ describe Keyword do
     its(:day_key) { should eq "groups:group-1:day:1361491200:中国" }
     its(:month_key) { should eq "groups:group-1:month:1359676800:中国" }
     its(:year_key) { should eq "groups:group-1:year:1356998400:中国" }
+    its(:minute_keywords_key) { should eq "groups:group-1:minute:keywords" }
+    its(:hour_keywords_key) { should eq "groups:group-1:hour:keywords" }
+    its(:day_keywords_key) { should eq "groups:group-1:day:keywords" }
+    its(:month_keywords_key) { should eq "groups:group-1:month:keywords" }
+    its(:year_keywords_key) { should eq "groups:group-1:year:keywords" }
   end
 end
