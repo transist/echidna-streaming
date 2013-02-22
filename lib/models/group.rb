@@ -7,7 +7,7 @@ class Group < Base
   def add_user(user)
     $redis.multi do
       $redis.sadd users_key, user.key
-      $redis.hset user.key, "group_key", self.key
+      $redis.hset user.key, "group_id", attributes['id']
     end
   end
 

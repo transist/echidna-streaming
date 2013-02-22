@@ -27,8 +27,8 @@ describe Group do
       expect($redis.smembers("groups:group-1:users")).to be_include @user.key
     end
 
-    it "should assign group key to user hash" do
-      expect($redis.hget @user.key, "group_key").to eq "groups:group-1"
+    it "should assign group id to user hash" do
+      expect($redis.hget @user.key, "group_id").to eq "group-1"
     end
   end
 

@@ -8,30 +8,30 @@ describe User do
 
   context "#save" do
     before do
-      User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"}).save
+      User.new({"id" => "1234567890", "type" => "tencent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"}).save
     end
 
     it "should save user attributes" do
-      attributes = $redis.hgetall "users:tecent:1234567890"
+      attributes = $redis.hgetall "users:tencent:1234567890"
       expect(attributes).to eq({"birth_year" => "2000", "gender" => "f", "city" => "shanghai"})
     end
   end
 
   context "#key" do
-    subject { User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"}) }
+    subject { User.new({"id" => "1234567890", "type" => "tencent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"}) }
 
-    its(:key) { should eq "users:tecent:1234567890" }
+    its(:key) { should eq "users:tencent:1234567890" }
   end
 
-  context "#group_key" do
+  context "#group_id" do
     before do
-      @user = User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"})
-      @group = Group.new({"name" => "group-1"})
+      @user = User.new({"id" => "1234567890", "type" => "tencent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"})
+      @group = Group.new({"id" => "group-1"})
       @group.add_user(@user)
     end
 
-    it "should know his group" do
-      expect(@user.group_key).to eq @group.key
+    it "should know his group id" do
+      expect(@user.group_id).to eq "group-1"
     end
   end
 end
