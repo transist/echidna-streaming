@@ -7,7 +7,7 @@ gem 'multi_json'
 gem 'rmmseg-cpp', require: 'rmmseg'
 gem 'em-synchrony'
 gem 'activesupport', require: [
-  'active_support/core_ext/hash/except',
+  'active_support/core_ext/hash/slice',
   'active_support/core_ext/time/calculations'
 ]
 

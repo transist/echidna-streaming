@@ -1,7 +1,7 @@
 # coding: utf-8
 class Group < Base
   def save
-    $redis.hmset key, *attributes.except('id').to_a.flatten
+    $redis.hmset key, *attributes.slice('name').to_a.flatten
   end
 
   def add_user(user)

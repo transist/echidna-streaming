@@ -1,7 +1,7 @@
 # coding: utf-8
 class User < Base
   def save
-    $redis.hmset key, *attributes.except('type', 'id').to_a.flatten
+    $redis.hmset key, *attributes.slice('birth_year', 'gender', 'city').to_a.flatten
   end
 
   def group_id
