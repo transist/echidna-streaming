@@ -1,11 +1,13 @@
 # coding: utf-8
 class Keyword < Base
   def save
-    $redis.incr minute_key
-    $redis.incr hour_key
-    $redis.incr day_key
-    $redis.incr month_key
-    $redis.incr year_key
+    $redis.multi do
+      $redis.incr minute_key
+      $redis.incr hour_key
+      $redis.incr day_key
+      $redis.incr month_key
+      $redis.incr year_key
+    end
   end
 
   def minute_key
