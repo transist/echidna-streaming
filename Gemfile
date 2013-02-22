@@ -10,6 +10,7 @@ gem 'activesupport', require: [
   'active_support/core_ext/hash/slice',
   'active_support/core_ext/time/calculations'
 ]
+gem 'goliath'
 
 group :test do
   gem 'rspec'
