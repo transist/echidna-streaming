@@ -1,4 +1,6 @@
 # coding: utf-8
+require_relative 'base'
+
 class Source < Base
   def save
     $redis.hmset key, *attributes.slice('url').to_a.flatten

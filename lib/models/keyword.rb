@@ -1,4 +1,6 @@
 # coding: utf-8
+require_relative 'base'
+
 class Keyword < Base
   def save
     $redis.multi do
