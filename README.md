@@ -83,7 +83,7 @@ redis-cli publish add_user_to_group '{"group_id":"group-1","user_id":"user-1","u
 add tweet
 
 ```bash
-redis-cli publish add_tweet '{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}'
+redis-cli publish add_tweet '{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":"20130222005534"}'
 ```
 
 ## Query trends
@@ -97,10 +97,11 @@ ruby trends.rb
 query trends
 
 ```bash
-curl localhost:9000?group_id=group-1&interval=minute&start_timestamp=1361494500&end_timestamp=1361496600
+curl
+localhost:9000?group_id=group-1&interval=minute&start_timestamp=20130222000000&end_timestamp=20130222013000
 
 {
-  "1361494500":[
+  "20130222005500":[
     {"word":"中","count":2,"source":"http://t.qq.com/t/efg"},
     {"word":"我","count":2,"source":"http://t.qq.com/t/efg"},
     {"word":"国","count":2,"source":"http://t.qq.com/t/efg"},
@@ -108,7 +109,7 @@ curl localhost:9000?group_id=group-1&interval=minute&start_timestamp=1361494500&
     {"word":"人","count":1,"source":"http://t.qq.com/t/efg"},
     {"word":"是","count":1,"source":"http://t.qq.com/t/efg"}
   ],
-  "1361494620":[
+  "20130222005700":[
     {"word":"上","count":1,"source":"http://t.qq.com/t/efg"},
     {"word":"中","count":1,"source":"http://t.qq.com/t/efg"},
     {"word":"国","count":1,"source":"http://t.qq.com/t/efg"},
@@ -117,10 +118,10 @@ curl localhost:9000?group_id=group-1&interval=minute&start_timestamp=1361494500&
   ]
 }
 
-curl localhost:9000?group_id=group-1&interval=hour&start_timestamp=1361490500&end_timestamp=1361496600
+curl localhost:9000?group_id=group-1&interval=hour&start_timestamp=20130222000000&end_timestamp=20130222010000
 
 {
-  "1361491200":[
+  "20130222000000":[
     {"word":"国","count":3,"source":"http://t.qq.com/t/efg"},
     {"word":"中","count":3,"source":"http://t.qq.com/t/efg"},
     {"word":"我","count":2,"source":"http://t.qq.com/t/efg"},
