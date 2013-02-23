@@ -83,22 +83,22 @@ class Keyword < Base
   end
 
   def minute_timestamp
-    Time.at(@attributes['timestamp']).utc.change(sec: 0).to_i
+    @attributes['timestamp'].sub(/\d{2}$/, '00')
   end
 
   def hour_timestamp
-    Time.at(@attributes['timestamp']).utc.beginning_of_hour.to_i
+    @attributes['timestamp'].sub(/\d{4}$/, '0000')
   end
 
   def day_timestamp
-    Time.at(@attributes['timestamp']).utc.beginning_of_day.to_i
+    @attributes['timestamp'].sub(/\d{6}$/, '000000')
   end
 
   def month_timestamp
-    Time.at(@attributes['timestamp']).utc.beginning_of_month.to_i
+    @attributes['timestamp'].sub(/\d{8}$/, '01000000')
   end
 
   def year_timestamp
-    Time.at(@attributes['timestamp']).utc.beginning_of_year.to_i
+    @attributes['timestamp'].sub(/\d{10}$/, '0101000000')
   end
 end

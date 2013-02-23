@@ -23,40 +23,40 @@ describe Group do
       Source.new("id" => "source-1", "url" => "http://t.qq.com/t/source-1").save
       Source.new("id" => "source-2", "url" => "http://t.qq.com/t/source-2").save
       Source.new("id" => "source-3", "url" => "http://t.qq.com/t/source-3").save
-      Keyword.new({"group_id" => "group-1", "timestamp" => 1361494534, "word" => "中国", "source_id" => "source-1"}).save
-      Keyword.new({"group_id" => "group-1", "timestamp" => 1361494638, "word" => "中国", "source_id" => "source-3"}).save
-      Keyword.new({"group_id" => "group-1", "timestamp" => 1361494534, "word" => "中间", "source_id" => "source-2"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => "20130222005534", "word" => "中国", "source_id" => "source-1"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => "20130222005718", "word" => "中国", "source_id" => "source-3"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => "20130222005534", "word" => "中间", "source_id" => "source-2"}).save
     end
 
     it "should get trends when timestamp in the period" do
-      expect(subject.trends('minute', 1361494500, 1361496600)).to eq({
-        "1361494500" => [
+      expect(subject.trends('minute', "20130222005500", "20130222013000")).to eq({
+        "20130222005500" => [
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-1" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
-        ], "1361494620" => [
+        ], "20130222005700" => [
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-3" }
         ]
       })
-      expect(subject.trends('hour', 1361491200, 1361523600)).to eq({
-        "1361491200" => [
+      expect(subject.trends('hour', "20130222000000", "20130222090000")).to eq({
+        "20130222000000" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
-      expect(subject.trends('day', 1361491200, 1361491200)).to eq({
-        "1361491200" => [
+      expect(subject.trends('day', "20130222000000", "20130222000000")).to eq({
+        "20130222000000" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
-      expect(subject.trends('month', 1359676800, 1359676800)).to eq({
-        "1359676800" => [
+      expect(subject.trends('month', "20130201000000", "20130201000000")).to eq({
+        "20130201000000" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
-      expect(subject.trends('year', 1356998400, 1356998400)).to eq({
-        "1356998400" => [
+      expect(subject.trends('year', "20130101000000", "20130101000000")).to eq({
+        "20130101000000" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
