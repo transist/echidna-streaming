@@ -59,7 +59,7 @@ bundle install
 start worker
 
 ```bash
-ruby lib/worker.rb
+ECHIDNA_ENV=development ruby bin/worker.rb
 ```
 
 add a user
@@ -91,17 +91,16 @@ redis-cli publish add_tweet '{"user_id":"user-1","user_type":"tencent","text":"�
 start trends server
 
 ```bash
-ruby trends.rb
+ECHIDNA_ENV=development ruby trends.rb
 ```
 
 query trends
 
 ```bash
-curl
-localhost:9000?group_id=group-1&interval=minute&start_timestamp=20130222000000&end_timestamp=20130222013000
+curl localhost:9000?group_id=group-1&interval=minute&start_timestamp=20130222000000&end_timestamp=20130222013000
 
 {
-  "20130222005500":[
+  "201302220055":[
     {"word":"中","count":2,"source":"http://t.qq.com/t/efg"},
     {"word":"我","count":2,"source":"http://t.qq.com/t/efg"},
     {"word":"国","count":2,"source":"http://t.qq.com/t/efg"},
@@ -109,7 +108,7 @@ localhost:9000?group_id=group-1&interval=minute&start_timestamp=20130222000000&e
     {"word":"人","count":1,"source":"http://t.qq.com/t/efg"},
     {"word":"是","count":1,"source":"http://t.qq.com/t/efg"}
   ],
-  "20130222005700":[
+  "201302220057":[
     {"word":"上","count":1,"source":"http://t.qq.com/t/efg"},
     {"word":"中","count":1,"source":"http://t.qq.com/t/efg"},
     {"word":"国","count":1,"source":"http://t.qq.com/t/efg"},
@@ -121,7 +120,7 @@ localhost:9000?group_id=group-1&interval=minute&start_timestamp=20130222000000&e
 curl localhost:9000?group_id=group-1&interval=hour&start_timestamp=20130222000000&end_timestamp=20130222010000
 
 {
-  "20130222000000":[
+  "2013022200":[
     {"word":"国","count":3,"source":"http://t.qq.com/t/efg"},
     {"word":"中","count":3,"source":"http://t.qq.com/t/efg"},
     {"word":"我","count":2,"source":"http://t.qq.com/t/efg"},

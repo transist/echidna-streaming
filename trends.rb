@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'bundler'
-Bundler.require(:default)
+ENV['ECHIDNA_ENV'] ||= "development"
+Bundler.require(:default, ENV['ECHIDNA_ENV'])
 
 Dir["lib/helpers/*.rb"].each { |file| require_relative file }
 Dir["lib/models/*.rb"].each { |file| require_relative file }

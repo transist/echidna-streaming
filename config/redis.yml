@@ -1,0 +1,14 @@
+development:
+  db: 0
+
+test:
+  db: 1
+
+qa:
+  db: 2
+
+staging:
+  db: 4
+
+production:
+  db: 8
