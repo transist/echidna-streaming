@@ -2,6 +2,7 @@
 require 'bundler'
 Bundler.require(:default)
 
+Dir["lib/helpers/*.rb"].each { |file| require_relative file }
 Dir["lib/models/*.rb"].each { |file| require_relative file }
 
 class Trends < Goliath::API

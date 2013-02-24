@@ -83,22 +83,22 @@ class Keyword < Base
   end
 
   def minute_timestamp
-    @attributes['timestamp'].sub(/\d{2}$/, '00')
+    Timestamp.new(@attributes['timestamp']).to_minute
   end
 
   def hour_timestamp
-    @attributes['timestamp'].sub(/\d{4}$/, '0000')
+    Timestamp.new(@attributes['timestamp']).to_hour
   end
 
   def day_timestamp
-    @attributes['timestamp'].sub(/\d{6}$/, '000000')
+    Timestamp.new(@attributes['timestamp']).to_day
   end
 
   def month_timestamp
-    @attributes['timestamp'].sub(/\d{8}$/, '01000000')
+    Timestamp.new(@attributes['timestamp']).to_month
   end
 
   def year_timestamp
-    @attributes['timestamp'].sub(/\d{10}$/, '0101000000')
+    Timestamp.new(@attributes['timestamp']).to_year
   end
 end

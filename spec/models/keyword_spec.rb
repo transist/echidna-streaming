@@ -40,16 +40,16 @@ describe Keyword do
   context "keys" do
     subject { Keyword.new({"group_id" => "group-1", "timestamp" => "20130222005534", "word" => "中国"}) }
 
-    its(:minute_key) { should eq "groups:group-1:minute:20130222005500:中国" }
-    its(:hour_key) { should eq "groups:group-1:hour:20130222000000:中国" }
-    its(:day_key) { should eq "groups:group-1:day:20130222000000:中国" }
-    its(:month_key) { should eq "groups:group-1:month:20130201000000:中国" }
-    its(:year_key) { should eq "groups:group-1:year:20130101000000:中国" }
-    its(:minute_source_id_key) { should eq "groups:group-1:minute:20130222005500:中国:source_id" }
-    its(:hour_source_id_key) { should eq "groups:group-1:hour:20130222000000:中国:source_id" }
-    its(:day_source_id_key) { should eq "groups:group-1:day:20130222000000:中国:source_id" }
-    its(:month_source_id_key) { should eq "groups:group-1:month:20130201000000:中国:source_id" }
-    its(:year_source_id_key) { should eq "groups:group-1:year:20130101000000:中国:source_id" }
+    its(:minute_key) { should eq "groups:group-1:minute:201302220055:中国" }
+    its(:hour_key) { should eq "groups:group-1:hour:2013022200:中国" }
+    its(:day_key) { should eq "groups:group-1:day:20130222:中国" }
+    its(:month_key) { should eq "groups:group-1:month:201302:中国" }
+    its(:year_key) { should eq "groups:group-1:year:2013:中国" }
+    its(:minute_source_id_key) { should eq "groups:group-1:minute:201302220055:中国:source_id" }
+    its(:hour_source_id_key) { should eq "groups:group-1:hour:2013022200:中国:source_id" }
+    its(:day_source_id_key) { should eq "groups:group-1:day:20130222:中国:source_id" }
+    its(:month_source_id_key) { should eq "groups:group-1:month:201302:中国:source_id" }
+    its(:year_source_id_key) { should eq "groups:group-1:year:2013:中国:source_id" }
     its(:minute_keywords_key) { should eq "groups:group-1:minute:keywords" }
     its(:hour_keywords_key) { should eq "groups:group-1:hour:keywords" }
     its(:day_keywords_key) { should eq "groups:group-1:day:keywords" }

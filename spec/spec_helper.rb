@@ -1,6 +1,7 @@
 require "bundler"
 Bundler.require(:default, :test)
 
+Dir["lib/helpers/*.rb"].each { |file| require_relative "../#{file}" }
 Dir["lib/models/*.rb"].each { |file| require_relative "../#{file}" }
 
 $redis = Redis.new driver: :hiredis

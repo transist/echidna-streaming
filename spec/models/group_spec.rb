@@ -30,33 +30,34 @@ describe Group do
 
     it "should get trends when timestamp in the period" do
       expect(subject.trends('minute', "20130222005500", "20130222013000")).to eq({
-        "20130222005500" => [
+        "201302220055" => [
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-1" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
-        ], "20130222005700" => [
+        ],
+        "201302220057" => [
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-3" }
         ]
       })
       expect(subject.trends('hour', "20130222000000", "20130222090000")).to eq({
-        "20130222000000" => [
+        "2013022200" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
       expect(subject.trends('day', "20130222000000", "20130222000000")).to eq({
-        "20130222000000" => [
+        "20130222" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
       expect(subject.trends('month', "20130201000000", "20130201000000")).to eq({
-        "20130201000000" => [
+        "201302" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
       expect(subject.trends('year', "20130101000000", "20130101000000")).to eq({
-        "20130101000000" => [
+        "2013" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]

@@ -8,7 +8,7 @@ class Group < Base
   end
 
   def trends(interval, start_timestamp, end_timestamp, limit=100)
-    keys = $redis.zrangebyscore "groups:#{@attributes['id']}:#{interval}:keywords", start_timestamp.to_i, end_timestamp.to_i
+    keys = $redis.zrangebyscore "groups:#{@attributes['id']}:#{interval}:keywords", Timestamp.new(start_timestamp).send("to_#{interval}"), Timestamp.new(end_timestamp).send("to_#{interval}")
     trends = {}
     keys.each do |key|
       count = $redis.get(key).to_i
