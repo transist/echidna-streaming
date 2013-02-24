@@ -8,8 +8,9 @@ Dir["lib/models/*.rb"].each { |file| require_relative "../#{file}" }
 
 EM.synchrony do
   redis_config = YAML.load_file("config/redis.yml")[ENV['ECHIDNA_ENV']]
-  $subscribe_redis = Redis.new redis_config.merge(driver: "synchrony")
-  $redis = Redis.new redis_config.merge(driver: "hiredis")
+  namespace = redis_config.delete("namespace")
+  $subscribe_redis = Redis::Namespace.new(namespace, redis: Redis.new(redis_config.merge(driver: "synchrony")))
+  $redis = Redis::Namespace.new(namespace, redis: Redis.new(redis_config.merge(driver: "hiredis")))
 
   # publish add_user '{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}'
   # publish add_group '{"id":"group-1","name":"Group 1"}'
@@ -19,7 +20,7 @@ EM.synchrony do
     on.message do |channel, msg|
       attributes = MultiJson.decode(msg)
       begin
-        case channel
+        case channel.split(":").last
         when "add_user"
           User.new(attributes).save
         when "add_group"
@@ -35,10 +36,12 @@ EM.synchrony do
           loop do
             token = algorithm.next_token
             break if token.nil?
-            $redis.publish "add_word", MultiJson.encode({"group_id" => group_id, "timestamp" => attributes['timestamp'], "source_id" => attributes['id'], "word" => token.text})
+            $redis.publish "add_word", '{}'
+            $redis.rpush "word", MultiJson.encode({"group_id" => group_id, "timestamp" => attributes['timestamp'], "source_id" => attributes['id'], "word" => token.text})
           end
         when "add_word"
-          Keyword.new(attributes).save
+          word_attributes = MultiJson.decode($redis.lpop("word"))
+          Keyword.new(word_attributes).save
         end
       rescue
         puts $!.message

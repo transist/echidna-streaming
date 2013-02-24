@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem 'hiredis'
 gem 'redis'
+gem 'redis-namespace'
 gem 'yajl-ruby', require: 'yajl'
 gem 'multi_json'
 gem 'rmmseg-cpp', require: 'rmmseg'

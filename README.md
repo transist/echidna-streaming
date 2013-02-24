@@ -103,7 +103,7 @@ ECHIDNA_ENV=development ruby trends.rb
 query trends
 
 ```bash
-curl localhost:9000?group_id=group-1&interval=minute&start_timestamp=20130222000000&end_timestamp=20130222013000
+curl "localhost:9000?group_id=group-1&interval=minute&start_timestamp=20130222000000&end_timestamp=20130222013000"
 
 {
   "201302220055":[
@@ -123,7 +123,7 @@ curl localhost:9000?group_id=group-1&interval=minute&start_timestamp=20130222000
   ]
 }
 
-curl localhost:9000?group_id=group-1&interval=hour&start_timestamp=20130222000000&end_timestamp=20130222010000
+curl "localhost:9000?group_id=group-1&interval=hour&start_timestamp=20130222000000&end_timestamp=20130222010000"
 
 {
   "2013022200":[

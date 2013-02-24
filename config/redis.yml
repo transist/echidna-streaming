@@ -1,14 +1,14 @@
 development:
-  db: 0
+  namespace: 'e:d'
 
 test:
-  db: 1
+  namespace: 'e:t'
 
 qa:
-  db: 2
+  namespace: 'e:q'
 
 staging:
-  db: 4
+  namespace: 'e:s'
 
 production:
-  db: 8
+  namespace: 'e:p'
