@@ -3,7 +3,7 @@ require "spec_helper"
 
 describe Keyword do
   before do
-    $redis.flushdb
+    flush_redis
   end
 
   context "#save" do
