@@ -2,6 +2,7 @@
 require 'bundler'
 ENV['ECHIDNA_ENV'] ||= "development"
 Bundler.require(:default, ENV['ECHIDNA_ENV'])
+require 'goliath'
 
 Dir["lib/helpers/*.rb"].each { |file| require_relative file }
 Dir["lib/models/*.rb"].each { |file| require_relative file }

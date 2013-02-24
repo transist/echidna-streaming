@@ -88,6 +88,12 @@ redis-cli publish add_tweet '{"user_id":"user-1","user_type":"tencent","text":"æ
 
 ## Query trends
 
+test by cli
+
+```bash
+ECHIDNA_ENV=development ruby bin/trends_test.rb group-1 minute 20130222000000 20130222013000
+```
+
 start trends server
 
 ```bash

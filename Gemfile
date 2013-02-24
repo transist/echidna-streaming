@@ -11,7 +11,7 @@ gem 'activesupport', require: [
   'active_support/core_ext/time/calculations'
 ]
 
-gem 'goliath'
+gem 'goliath', require: false
 
 group :test do
   gem 'rspec'
