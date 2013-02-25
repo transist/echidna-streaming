@@ -1,7 +1,11 @@
 # coding: utf-8
+streaming_env = ENV['ECHIDNA_STREAMING_ENV'] || "development"
+redis_host = ENV['ECHIDNA_REDIS_HOST'] || "127.0.0.1"
+redis_port = ENV['ECHIDNA_REDIS_PORT'] || "6379"
+redis_namespace = ENV['ECHIDNA_REDIS_NAMESPACE'] || "e:d"
+
 require 'bundler'
-ENV['ECHIDNA_ENV'] ||= "development"
-Bundler.require(:default, ENV['ECHIDNA_ENV'])
+Bundler.require(:default, streaming_env)
 
 Dir["lib/helpers/*.rb"].each { |file| require_relative "../#{file}" }
 Dir["lib/models/*.rb"].each { |file| require_relative "../#{file}" }
@@ -9,10 +13,8 @@ Dir["lib/models/*.rb"].each { |file| require_relative "../#{file}" }
 RMMSeg::Dictionary.load_dictionaries
 
 EM.synchrony do
-  redis_config = YAML.load_file("config/redis.yml")[ENV['ECHIDNA_ENV']]
-  namespace = redis_config.delete("namespace")
-  $subscribe_redis = Redis::Namespace.new(namespace, redis: Redis.new(redis_config.merge(driver: "synchrony")))
-  $redis = Redis::Namespace.new(namespace, redis: Redis.new(redis_config.merge(driver: "hiredis")))
+  $subscribe_redis = Redis::Namespace.new(redis_namespace, redis: Redis.new(host: redis_host, port: redis_port, driver: "synchrony"))
+  $redis = Redis::Namespace.new(redis_namespace, redis: Redis.new(host: redis_host, port: redis_port, driver: "hiredis"))
 
   # publish e:d:add_user '{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}'
   # publish e:d:add_group '{"id":"group-1","name":"Group 1"}'

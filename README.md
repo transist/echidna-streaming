@@ -23,7 +23,7 @@ brew install redis
 start worker
 
 ```bash
-ECHIDNA_ENV=development ruby bin/worker.rb
+ECHIDNA_STREAMING_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby bin/worker.rb
 ```
 
 add a user
@@ -55,13 +55,13 @@ redis-cli publish e:d:add_tweet '{"user_id":"user-1","user_type":"tencent","text
 test by cli
 
 ```bash
-ECHIDNA_ENV=development ruby bin/trends_test.rb group-1 minute 20130222000000 20130222013000
+ECHIDNA_STREAMING_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby bin/trends_test.rb group-1 minute 20130222000000 20130222013000
 ```
 
 start trends server
 
 ```bash
-ECHIDNA_ENV=development ruby trends.rb
+ECHIDNA_STREAMING_ENV=development ECHIDNA_STREAMING_IP=0.0.0.0 ECHIDNA_STREAMING_PORT=9000 ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby trends.rb
 ```
 
 query trends
