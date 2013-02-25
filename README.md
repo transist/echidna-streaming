@@ -1,6 +1,6 @@
 # echidna-streaming
 
-# Setup
+## Setup
 
 install redis-server on debian
 
@@ -14,7 +14,7 @@ or mac
 brew install redis
 ```
 
-## Ruby Environment Setup
+### Ruby Environment Setup
 
 <https://github.com/transist/echidna/wiki/Ruby-Environment-Setup>
 
