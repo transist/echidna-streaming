@@ -14,45 +14,9 @@ or mac
 brew install redis
 ```
 
-install rvm for ruby
+## Ruby Environment Setup
 
-```bash
-curl -L https://get.rvm.io | bash -s stable --ruby
-source ~/.rvm/scripts/rvm
-echo 'rvm_trust_rvmrcs_flag=1' > ~/.rvmrc
-```
-
-install dependencies for ruby
-
-```bash
-rvm requirements
-```
-
-then followed the notes
-
-install ruby
-
-```bash
-rvm install 1.9.3-p327-falcon --patch falcon
-rvm use 1.9.3-p327-falcon --default
-```
-
-install bundler (ruby gems management)
-
-```bash
-rvm gemset use global
-gem install bundler
-rvm gemset use default
-```
-
-copy .rvmrc.example to .rvmrc and customize it to conform your ruby setup if necessary
-then install app dependencies
-
-```bash
-cd <app path>
-cp .rvmrc.example .rvmrc
-bundle install
-```
+<https://github.com/transist/echidna/wiki/Ruby-Environment-Setup>
 
 ## Streaming workeer
 
@@ -137,4 +101,10 @@ curl "localhost:9000?group_id=group-1&interval=hour&start_timestamp=201302220000
     {"word":"海","count":1,"source":"http://t.qq.com/t/efg"}
   ]
 }
+```
+
+## Test
+
+```bash
+bundle exec rspec spec/
 ```
