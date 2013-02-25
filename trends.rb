@@ -9,7 +9,7 @@ $redis_namespace = ENV['ECHIDNA_REDIS_NAMESPACE'] || "e:d"
 ARGV = ["-e", streaming_env, "-a", streaming_ip, "-p", streaming_port]
 
 require 'bundler'
-Bundler.require(:default, streaming_env)
+Bundler.require(:default, streaming_env.to_sym)
 require 'goliath'
 
 Dir["lib/helpers/*.rb"].each { |file| require_relative file }
