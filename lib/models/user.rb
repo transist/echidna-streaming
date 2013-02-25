@@ -11,6 +11,6 @@ class User < Base
   end
 
   def key
-    "users:#{@attributes['type']}:#{@attributes['id']}"
+    "users/#{@attributes['type']}/#{@attributes['id']}"
   end
 end

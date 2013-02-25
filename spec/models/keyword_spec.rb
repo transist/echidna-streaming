@@ -8,7 +8,7 @@ describe Keyword do
 
   context "#save" do
     before do
-      @keyword = Keyword.new({"group_id" => "group-1", "timestamp" => "20130222005534", "word" => "中国", "source_id" => "source-1"})
+      @keyword = Keyword.new({"group_id" => "group-1", "timestamp" => "2013-02-22T00:55:34Z", "word" => "中国", "source_id" => "source-1"})
       @keyword.save
     end
 
@@ -38,22 +38,22 @@ describe Keyword do
   end
 
   context "keys" do
-    subject { Keyword.new({"group_id" => "group-1", "timestamp" => "20130222005534", "word" => "中国"}) }
+    subject { Keyword.new({"group_id" => "group-1", "timestamp" => "2013-02-22T00:55:34Z", "word" => "中国"}) }
 
-    its(:minute_key) { should eq "groups:group-1:minute:201302220055:中国" }
-    its(:hour_key) { should eq "groups:group-1:hour:2013022200:中国" }
-    its(:day_key) { should eq "groups:group-1:day:20130222:中国" }
-    its(:month_key) { should eq "groups:group-1:month:201302:中国" }
-    its(:year_key) { should eq "groups:group-1:year:2013:中国" }
-    its(:minute_source_id_key) { should eq "groups:group-1:minute:201302220055:中国:source_id" }
-    its(:hour_source_id_key) { should eq "groups:group-1:hour:2013022200:中国:source_id" }
-    its(:day_source_id_key) { should eq "groups:group-1:day:20130222:中国:source_id" }
-    its(:month_source_id_key) { should eq "groups:group-1:month:201302:中国:source_id" }
-    its(:year_source_id_key) { should eq "groups:group-1:year:2013:中国:source_id" }
-    its(:minute_keywords_key) { should eq "groups:group-1:minute:keywords" }
-    its(:hour_keywords_key) { should eq "groups:group-1:hour:keywords" }
-    its(:day_keywords_key) { should eq "groups:group-1:day:keywords" }
-    its(:month_keywords_key) { should eq "groups:group-1:month:keywords" }
-    its(:year_keywords_key) { should eq "groups:group-1:year:keywords" }
+    its(:minute_key) { should eq "groups/group-1/minute/2013-02-22T00:55/中国" }
+    its(:hour_key) { should eq "groups/group-1/hour/2013-02-22T00/中国" }
+    its(:day_key) { should eq "groups/group-1/day/2013-02-22/中国" }
+    its(:month_key) { should eq "groups/group-1/month/2013-02/中国" }
+    its(:year_key) { should eq "groups/group-1/year/2013/中国" }
+    its(:minute_source_id_key) { should eq "groups/group-1/minute/2013-02-22T00:55/中国/source_id" }
+    its(:hour_source_id_key) { should eq "groups/group-1/hour/2013-02-22T00/中国/source_id" }
+    its(:day_source_id_key) { should eq "groups/group-1/day/2013-02-22/中国/source_id" }
+    its(:month_source_id_key) { should eq "groups/group-1/month/2013-02/中国/source_id" }
+    its(:year_source_id_key) { should eq "groups/group-1/year/2013/中国/source_id" }
+    its(:minute_keywords_key) { should eq "groups/group-1/minute/keywords" }
+    its(:hour_keywords_key) { should eq "groups/group-1/hour/keywords" }
+    its(:day_keywords_key) { should eq "groups/group-1/day/keywords" }
+    its(:month_keywords_key) { should eq "groups/group-1/month/keywords" }
+    its(:year_keywords_key) { should eq "groups/group-1/year/keywords" }
   end
 end

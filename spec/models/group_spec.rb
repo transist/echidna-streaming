@@ -12,7 +12,7 @@ describe Group do
     end
 
     it "should save group attributes" do
-      attributes = $redis.hgetall "groups:group-1"
+      attributes = $redis.hgetall "groups/group-1"
       expect(attributes).to eq({"name" => "Group 1"})
     end
   end
@@ -23,40 +23,40 @@ describe Group do
       Source.new("id" => "source-1", "url" => "http://t.qq.com/t/source-1").save
       Source.new("id" => "source-2", "url" => "http://t.qq.com/t/source-2").save
       Source.new("id" => "source-3", "url" => "http://t.qq.com/t/source-3").save
-      Keyword.new({"group_id" => "group-1", "timestamp" => "20130222005534", "word" => "中国", "source_id" => "source-1"}).save
-      Keyword.new({"group_id" => "group-1", "timestamp" => "20130222005718", "word" => "中国", "source_id" => "source-3"}).save
-      Keyword.new({"group_id" => "group-1", "timestamp" => "20130222005534", "word" => "中间", "source_id" => "source-2"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => "2013-02-22T00:55:34Z", "word" => "中国", "source_id" => "source-1"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => "2013-02-22T00:57:18Z", "word" => "中国", "source_id" => "source-3"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => "2013-02-22T00:55:34Z", "word" => "中间", "source_id" => "source-2"}).save
     end
 
     it "should get trends when timestamp in the period" do
-      expect(subject.trends('minute', "20130222005500", "20130222013000")).to eq({
-        "201302220055" => [
+      expect(subject.trends('minute', "2013-02-22T00:55:00Z", "2013-02-22T01:30:00Z")).to eq({
+        "2013-02-22T00:55" => [
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-1" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ],
-        "201302220057" => [
+        "2013-02-22T00:57" => [
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-3" }
         ]
       })
-      expect(subject.trends('hour', "20130222000000", "20130222090000")).to eq({
-        "2013022200" => [
+      expect(subject.trends('hour', "2013-02-22T00:00:00Z", "2013-02-22T09:00:00:Z")).to eq({
+        "2013-02-22T00" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
-      expect(subject.trends('day', "20130222000000", "20130222000000")).to eq({
-        "20130222" => [
+      expect(subject.trends('day', "2013-02-22T00:00:00Z", "2013-02-22T00:00:00Z")).to eq({
+        "2013-02-22" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
-      expect(subject.trends('month', "20130201000000", "20130201000000")).to eq({
-        "201302" => [
+      expect(subject.trends('month', "2013-02-01T00:00:00Z", "2013-02-01T00:00:00Z")).to eq({
+        "2013-02" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
-      expect(subject.trends('year', "20130101000000", "20130101000000")).to eq({
+      expect(subject.trends('year', "2013-01-01T00:00:00Z", "2013-01-01T00:00:00Z")).to eq({
         "2013" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
@@ -72,7 +72,7 @@ describe Group do
     end
 
     it "should add a user" do
-      expect($redis.smembers("groups:group-1:users")).to be_include @user.key
+      expect($redis.smembers("groups/group-1/users")).to be_include @user.key
     end
 
     it "should assign group id to user hash" do
@@ -83,12 +83,12 @@ describe Group do
   context "#key" do
     subject { Group.new({"id" => "group-1", "name" => "Group 1"}) }
 
-    its(:key) { should eq "groups:group-1" }
+    its(:key) { should eq "groups/group-1" }
   end
 
   context "#users_key" do
     subject { Group.new({"id" => "group-1", "name" => "Group 1"}) }
 
-    its(:users_key) { should eq "groups:group-1:users" }
+    its(:users_key) { should eq "groups/group-1/users" }
   end
 end

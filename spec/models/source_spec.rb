@@ -12,7 +12,7 @@ describe Source do
     end
 
     it "should save source attributes" do
-      attributes = $redis.hgetall "sources:1234567890"
+      attributes = $redis.hgetall "sources/1234567890"
       expect(attributes).to eq({"url" => "http://t.qq.com/t/1234567890"})
     end
   end
@@ -20,6 +20,6 @@ describe Source do
   context "#key" do
     subject { Source.new({"id" => "1234567890", "url" => "http://t.qq.com/t/1234567890"}) }
 
-    its(:key) { should eq "sources:1234567890" }
+    its(:key) { should eq "sources/1234567890" }
   end
 end

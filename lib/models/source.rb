@@ -11,6 +11,6 @@ class Source < Base
   end
 
   def key
-    "sources:#{@attributes['id']}"
+    "sources/#{@attributes['id']}"
   end
 end

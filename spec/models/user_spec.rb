@@ -12,7 +12,7 @@ describe User do
     end
 
     it "should save user attributes" do
-      attributes = $redis.hgetall "users:tencent:1234567890"
+      attributes = $redis.hgetall "users/tencent/1234567890"
       expect(attributes).to eq({"birth_year" => "2000", "gender" => "f", "city" => "shanghai"})
     end
   end
@@ -20,7 +20,7 @@ describe User do
   context "#key" do
     subject { User.new({"id" => "1234567890", "type" => "tencent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"}) }
 
-    its(:key) { should eq "users:tencent:1234567890" }
+    its(:key) { should eq "users/tencent/1234567890" }
   end
 
   context "#group_id" do
