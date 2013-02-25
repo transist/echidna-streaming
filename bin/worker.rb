@@ -6,6 +6,8 @@ Bundler.require(:default, ENV['ECHIDNA_ENV'])
 Dir["lib/helpers/*.rb"].each { |file| require_relative "../#{file}" }
 Dir["lib/models/*.rb"].each { |file| require_relative "../#{file}" }
 
+RMMSeg::Dictionary.load_dictionaries
+
 EM.synchrony do
   redis_config = YAML.load_file("config/redis.yml")[ENV['ECHIDNA_ENV']]
   namespace = redis_config.delete("namespace")
