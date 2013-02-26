@@ -6,15 +6,19 @@ redis_namespace = ENV['ECHIDNA_REDIS_NAMESPACE'] || "e:d"
 
 require 'bundler'
 Bundler.require(:default, streaming_env)
+require 'syslog'
+$logger = Syslog.open("streaming worker", Syslog::LOG_PID | Syslog::LOG_CONS, Syslog::LOG_LOCAL3)
 
 Dir["lib/helpers/*.rb"].each { |file| require_relative "../#{file}" }
 Dir["lib/models/*.rb"].each { |file| require_relative "../#{file}" }
 
 RMMSeg::Dictionary.load_dictionaries
+$logger.notice("load dictionaries")
 
 EM.synchrony do
   $subscribe_redis = Redis::Namespace.new(redis_namespace, redis: Redis.new(host: redis_host, port: redis_port, driver: "synchrony"))
   $redis = Redis::Namespace.new(redis_namespace, redis: Redis.new(host: redis_host, port: redis_port, driver: "hiredis"))
+  $logger.notice("connect to redis: #{redis_host}:#{redis_port}/#{redis_namespace}")
 
   # publish e:d:add_user '{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}'
   # publish e:d:add_group '{"id":"group-1","name":"Group 1"}'
@@ -22,6 +26,7 @@ EM.synchrony do
   # publish e:d:add_tweet '{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}'
   $subscribe_redis.subscribe("add_user", "add_group", "add_user_to_group", "add_tweet", "add_word") do |on|
     on.message do |channel, msg|
+      $logger.notice("redis receive message: #{msg} on channel: #{channel}")
       attributes = MultiJson.decode(msg)
       begin
         case channel.split(":").last
@@ -48,7 +53,7 @@ EM.synchrony do
           Keyword.new(word_attributes).save
         end
       rescue
-        puts $!.message
+        $logger.notice("error: #{$!.message}")
       end
     end
   end

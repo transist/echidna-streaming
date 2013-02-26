@@ -14,6 +14,9 @@ require 'bundler'
 Bundler.require(:default, streaming_env.to_sym)
 require 'goliath'
 
+require 'syslog'
+$logger = Syslog.open("streaming trends", Syslog::LOG_PID | Syslog::LOG_CONS, Syslog::LOG_LOCAL3)
+
 Dir["lib/helpers/*.rb"].each { |file| require_relative file }
 Dir["lib/models/*.rb"].each { |file| require_relative file }
 
@@ -21,7 +24,7 @@ class Trends < Goliath::API
   use Goliath::Rack::Params
 
   def response(env)
-    logger.info "Received: #{params}"
+    $logger.notice("api received: #{params}")
     keywords = Group.new("id" => params["group_id"]).trends(params["interval"], params["start_timestamp"], params["end_timestamp"])
     [200, {}, MultiJson.encode(keywords)]
   end
