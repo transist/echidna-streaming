@@ -7,6 +7,6 @@ class City < Base
   end
 
   def key
-    "city/#{@attributes['name'].downcase}"
+    "city/#{@attributes['name']}"
   end
 end

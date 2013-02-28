@@ -8,17 +8,17 @@ describe City do
 
   context "#save" do
     before do
-      City.new("name" => "Shanghai", "tier_id" => "tier-1").save
+      City.new("name" => "上海", "tier_id" => "tier-1").save
     end
 
     it "should save group attributes" do
-      attributes = $redis.hgetall "city/shanghai"
+      attributes = $redis.hgetall "city/上海"
       expect(attributes).to eq({"tier_id" => "tier-1"})
     end
   end
 
   context "#key" do
-    subject { City.new("name" => "Shanghai", "tier_id" => "tier-1") }
-    its(:key) { should eq "city/shanghai" }
+    subject { City.new("name" => "上海", "tier_id" => "tier-1") }
+    its(:key) { should eq "city/上海" }
   end
 end

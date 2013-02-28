@@ -21,11 +21,11 @@ describe Tier do
     before do
       @tier = Tier.new("id" => "tier-1", "name" => "Tier 1")
       @tier.save
-      @tier.add_city("Shanghai")
+      @tier.add_city("上海")
     end
 
     it "should add Shanghai to Tier 1" do
-      expect(City.new("name" => "Shanghai")["tier_id"]).to eq "tier-1"
+      expect(City.new("name" => "上海")["tier_id"]).to eq "tier-1"
     end
   end
 

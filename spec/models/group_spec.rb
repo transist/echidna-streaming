@@ -8,12 +8,12 @@ describe Group do
 
   context "#save" do
     before do
-      Group.new({"id" => "group-1", "name" => "Group 1"}).save
+      Group.new({"id" => "group-1", "name" => "Group 1", "gender" => "female", "start_age" => 18, "end_age" => 24, "tier" => "Tier 1"}).save
     end
 
     it "should save group attributes" do
       attributes = $redis.hgetall "groups/group-1"
-      expect(attributes).to eq({"name" => "Group 1"})
+      expect(attributes).to eq({"name" => "Group 1", "gender" => "female", "start_age" => "18", "end_age" => "24", "tier" => "Tier 1"})
     end
   end
 
