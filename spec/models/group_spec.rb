@@ -76,7 +76,7 @@ describe Group do
     end
 
     it "should assign group id to user hash" do
-      expect($redis.hget @user.key, "group_id").to eq "group-1"
+      expect(@user["group_id"]).to eq "group-1"
     end
   end
 

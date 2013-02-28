@@ -17,6 +17,18 @@ describe Tier do
     end
   end
 
+  context "#add_city" do
+    before do
+      @tier = Tier.new("id" => "tier-1", "name" => "Tier 1")
+      @tier.save
+      @tier.add_city("Shanghai")
+    end
+
+    it "should add Shanghai to Tier 1" do
+      expect(City.new("name" => "Shanghai")["tier_id"]).to eq "tier-1"
+    end
+  end
+
   context "#key" do
     subject { Tier.new("id" => "tier-1", "name" => "Tier 1") }
     its(:key) { should eq "tiers/tier-1" }

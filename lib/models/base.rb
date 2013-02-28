@@ -10,12 +10,12 @@ class Base
     $redis.hmset key, *attributes.except('id').to_a.flatten
   end
 
-  def [](key)
-    $redis.hget key
+  def [](attribute_key)
+    $redis.hget key, attribute_key
   end
 
-  def []=(key, value)
-    $redis.hset key, value
+  def []=(attribute_key, value)
+    $redis.hset key, attribute_key, value
   end
 
   def key
