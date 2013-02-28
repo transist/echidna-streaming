@@ -2,6 +2,11 @@
 class Base
   attr_accessor :attributes
 
+  def self.new_with_key(key, attributes)
+    id = key.split('/').last
+    self.new(attributes.merge("id" => id))
+  end
+
   def initialize(attributes)
     @attributes = attributes
   end

@@ -6,6 +6,29 @@ describe Group do
     flush_redis
   end
 
+  context ".new_with_key" do
+    it "should set group id" do
+      expect(Group.new_with_key("groups/group-1", {}).key).to eq "groups/group-1"
+    end
+  end
+
+  context ".find_gropu_id" do
+    before do
+      tier = Tier.new("id" => "tier-1", "name" => "Tier 1")
+      tier.save
+      tier.add_city("上海")
+      Group.new("id" => "group-1", "name" => "Group 1", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "tier_id" => "tier-1").save
+      tier = Tier.new("id" => "tier-2", "name" => "Tier 2")
+      tier.save
+      tier.add_city("北京")
+      Group.new("id" => "group-2", "name" => "Group 2", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "tier_id" => "tier-2").save
+    end
+
+    it "should get group-1" do
+      expect(Group.find_group_id("female", "1994", "上海")).to eq "group-1"
+    end
+  end
+
   context "#save" do
     before do
       Group.new({"id" => "group-1", "name" => "Group 1", "gender" => "female", "start_age" => 18, "end_age" => 24, "tier" => "Tier 1"}).save
@@ -14,6 +37,10 @@ describe Group do
     it "should save group attributes" do
       attributes = $redis.hgetall "groups/group-1"
       expect(attributes).to eq({"name" => "Group 1", "gender" => "female", "start_age" => "18", "end_age" => "24", "tier" => "Tier 1"})
+    end
+
+    it "should add to groups key" do
+      expect($redis.smembers("groups")).to include("groups/group-1")
     end
   end
 
@@ -90,5 +117,10 @@ describe Group do
     subject { Group.new({"id" => "group-1", "name" => "Group 1"}) }
 
     its(:users_key) { should eq "groups/group-1/users" }
+  end
+
+  context ".key" do
+    subject { Group }
+    its(:key) { should eq "groups" }
   end
 end
