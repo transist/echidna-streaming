@@ -3,10 +3,6 @@ require_relative 'base'
 require 'set'
 
 class Group < Base
-  def save
-    $redis.hmset key, *attributes.slice('name').to_a.flatten
-  end
-
   def trends(interval, start_timestamp, end_timestamp, limit=100)
     keys = $redis.zrangebyscore "groups/#{@attributes['id']}/#{interval}/keywords", Timestamp.new(start_timestamp).send("to_#{interval}_int"), Timestamp.new(end_timestamp).send("to_#{interval}_int")
     trends = {}
@@ -28,10 +24,6 @@ class Group < Base
       $redis.sadd users_key, user.key
       $redis.hset user.key, "group_id", attributes['id']
     end
-  end
-
-  def key
-    "groups/#{@attributes['id']}"
   end
 
   def users_key
