@@ -17,6 +17,17 @@ describe Source do
     end
   end
 
+  context "#exist?" do
+    subject { Source.new({"id" => "1234567890", "url" => "http://t.qq.com/t/1234567890"}) }
+
+    its(:exist?) { should be_false }
+
+    it "should be true after saving" do
+      subject.save
+      expect(subject).to be_exist
+    end
+  end
+
   context "#key" do
     subject { Source.new({"id" => "1234567890", "url" => "http://t.qq.com/t/1234567890"}) }
 
