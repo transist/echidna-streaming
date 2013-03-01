@@ -4,13 +4,18 @@ redis_host = ENV['ECHIDNA_REDIS_HOST'] || "127.0.0.1"
 redis_port = ENV['ECHIDNA_REDIS_PORT'] || "6379"
 redis_namespace = ENV['ECHIDNA_REDIS_NAMESPACE'] || "e:d"
 
+require 'pathname'
+APP_ROOT = Pathname.new(File.expand_path('../..', __FILE__))
+
 require 'bundler'
 Bundler.require(:default, streaming_env)
 require 'syslog'
 $logger = Syslog.open("streaming worker", Syslog::LOG_PID | Syslog::LOG_CONS, Syslog::LOG_LOCAL3)
 
-Dir["lib/helpers/*.rb"].each { |file| require_relative "../#{file}" }
-Dir["lib/models/*.rb"].each { |file| require_relative "../#{file}" }
+p APP_ROOT
+
+Dir[APP_ROOT.join("lib/helpers/*.rb")].each { |file| require_relative file }
+Dir[APP_ROOT.join("lib/models/*.rb")].each { |file| require_relative file }
 
 RMMSeg::Dictionary.load_dictionaries
 $logger.notice("load dictionaries")
