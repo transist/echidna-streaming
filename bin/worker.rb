@@ -44,14 +44,21 @@ EM.synchrony do
           Group.new("id" => attributes["group_id"]).add_user(user)
         when "add_tweet"
           Source.new(attributes).save
-          group_id = User.new("id" => attributes["user_id"], "type" => attributes["user_type"]).group_id
+          group_id = User.new("id" => attributes["user_id"], "type" => attributes["user_type"])['group_id']
           algorithm = RMMSeg::Algorithm.new(attributes['text'])
           segments = []
           loop do
             token = algorithm.next_token
             break if token.nil?
             $redis.publish "add_word", '{}'
-            $redis.rpush "word", MultiJson.encode({"group_id" => group_id, "timestamp" => attributes['timestamp'], "source_id" => attributes['id'], "word" => token.text})
+            unless $redis.sismember "stopwords", token.text
+              $redis.rpush "word", MultiJson.encode(
+                "group_id" => group_id,
+                "timestamp" => attributes['timestamp'],
+                "source_id" => attributes['id'],
+                "word" => token.text
+              )
+            end
           end
         when "add_word"
           word_attributes = MultiJson.decode($redis.lpop("word"))
