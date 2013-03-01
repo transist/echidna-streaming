@@ -97,7 +97,7 @@ curl "localhost:9000?group_id=group-1&interval=hour&start_timestamp=201302220000
 Query group
 
 ```bash
-curl "http://localhost:9000/get_group?gender=female&birth_year=1993&city=%E4%B8%8A%E6%B5%B7"
+curl "http://localhost:9000/get_group_ids?gender=female&birth_year=1993&city=%E4%B8%8A%E6%B5%B7"
 
 {"id":"group-1"}
 ```

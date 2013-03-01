@@ -30,9 +30,9 @@ class Trends < Goliath::API
     when "/"
       keywords = Group.new("id" => params["group_id"]).trends(params["interval"], params["start_timestamp"], params["end_timestamp"])
       [200, {}, MultiJson.encode(keywords)]
-    when "/get_group"
-      group = Group.find_group_id(params["gender"], params["birth_year"], params["city"])
-      [200, {}, MultiJson.encode("id" => group)]
+    when "/get_group_ids"
+      group_ids = Group.find_group_ids(params["gender"], params["birth_year"], params["city"])
+      [200, {}, MultiJson.encode("ids" => group_ids)]
     end
   end
 end
