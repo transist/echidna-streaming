@@ -9,7 +9,7 @@ $redis_namespace = ENV['ECHIDNA_REDIS_NAMESPACE'] || "e:d"
 
 ARGV.replace ["-e", streaming_env, "-a", streaming_ip, "-p", streaming_port]
 ARGV << "-d" if streaming_daemon
-ARGV << '-sv' if ENV['ECHIDNA_STREAMING_ENV'] == 'development'
+ARGV << '-sv' if streaming_env == 'development'
 
 require 'bundler'
 Bundler.require(:default, streaming_env.to_sym)
