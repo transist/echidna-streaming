@@ -1,7 +1,7 @@
 # coding: utf-8
 streaming_env = ENV['ECHIDNA_STREAMING_ENV'] || "development"
 streaming_ip = ENV['ECHIDNA_STREAMING_IP'] || "0.0.0.0"
-streaming_port = ENV['ECHIDNA_STREAMING_PORT'] || "9000"
+streaming_port = ENV['ECHIDNA_STREAMING_PORT'] || "9001"
 streaming_daemon = ENV['ECHIDNA_STREAMING_DAEMON'] == "true"
 $redis_host = ENV['ECHIDNA_REDIS_HOST'] || "127.0.0.1"
 $redis_port = ENV['ECHIDNA_REDIS_PORT'] || "6379"
