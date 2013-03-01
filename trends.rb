@@ -1,7 +1,7 @@
 # coding: utf-8
 streaming_env = ENV['ECHIDNA_STREAMING_ENV'] || "development"
 streaming_ip = ENV['ECHIDNA_STREAMING_IP'] || "0.0.0.0"
-streaming_port = ENV['ECHIDNA_STREAMING_PORT'] || "9000"
+streaming_port = ENV['ECHIDNA_STREAMING_PORT'] || "9001"
 streaming_daemon = ENV['ECHIDNA_STREAMING_DAEMON'] == "true"
 $redis_host = ENV['ECHIDNA_REDIS_HOST'] || "127.0.0.1"
 $redis_port = ENV['ECHIDNA_REDIS_PORT'] || "6379"
@@ -9,6 +9,7 @@ $redis_namespace = ENV['ECHIDNA_REDIS_NAMESPACE'] || "e:d"
 
 ARGV.replace ["-e", streaming_env, "-a", streaming_ip, "-p", streaming_port]
 ARGV << "-d" if streaming_daemon
+ARGV << '-sv' if ENV['ECHIDNA_STREAMING_ENV'] == 'development'
 
 require 'bundler'
 Bundler.require(:default, streaming_env.to_sym)
