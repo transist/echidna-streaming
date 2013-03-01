@@ -36,3 +36,4 @@ class Trends < Goliath::API
     end
   end
 end
+$logger.notice("streaming listen on #{streaming_ip}:#{streaming_port}")
