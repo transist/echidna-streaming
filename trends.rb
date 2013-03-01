@@ -25,7 +25,7 @@ class Trends < Goliath::API
   use Goliath::Rack::Params
 
   def response(env)
-    $logger.notice("api received: #{params}")
+    $logger.notice("#{env["REQUEST_PATH"]} api received: #{params}")
     case env["REQUEST_PATH"]
     when "/"
       keywords = Group.new("id" => params["group_id"]).trends(params["interval"], params["start_timestamp"], params["end_timestamp"])

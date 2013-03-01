@@ -12,8 +12,6 @@ Bundler.require(:default, streaming_env)
 require 'syslog'
 $logger = Syslog.open("streaming worker", Syslog::LOG_PID | Syslog::LOG_CONS, Syslog::LOG_LOCAL3)
 
-p APP_ROOT
-
 Dir[APP_ROOT.join("lib/helpers/*.rb")].each { |file| require_relative file }
 Dir[APP_ROOT.join("lib/models/*.rb")].each { |file| require_relative file }
 
