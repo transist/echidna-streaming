@@ -34,12 +34,15 @@ class Group < Base
   end
 
   def trends(interval, start_timestamp, end_timestamp, limit=100)
-    keys = $redis.zrangebyscore "groups/#{@attributes['id']}/#{interval}/keywords", Timestamp.new(start_timestamp).send("to_#{interval}_int"), Timestamp.new(end_timestamp).send("to_#{interval}_int")
+    keys = $redis.zrangebyscore "groups/#{@attributes['id']}/#{interval}/keywords",
+                                Timestamp.new(start_timestamp, format: 'plain').send("to_#{interval}"),
+                                Timestamp.new(end_timestamp, format: 'plain').send("to_#{interval}")
     trends = {}
     keys.each do |key|
       count = $redis.get(key).to_i
       _, _, _, timestamp, word = key.split('/')
       source_url = Source.new("id" => $redis.get(key + "/source_id")).url
+      timestamp = Timestamp.new(Time.at(timestamp.to_i)).send("to_formatted_#{interval}")
       trends[timestamp] ||= []
       trends[timestamp] << {"word" => word, "count" => count, "source" => source_url}
     end

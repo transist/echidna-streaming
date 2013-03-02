@@ -9,11 +9,11 @@ class Keyword < Base
       $redis.set day_source_id_key, @attributes['source_id']
       $redis.set month_source_id_key, @attributes['source_id']
       $redis.set year_source_id_key, @attributes['source_id']
-      $redis.zadd minute_keywords_key, minute_timestamp_int, minute_key
-      $redis.zadd hour_keywords_key, hour_timestamp_int, hour_key
-      $redis.zadd day_keywords_key, day_timestamp_int, day_key
-      $redis.zadd month_keywords_key, month_timestamp_int, month_key
-      $redis.zadd year_keywords_key, year_timestamp_int, year_key
+      $redis.zadd minute_keywords_key, minute_timestamp, minute_key
+      $redis.zadd hour_keywords_key, hour_timestamp, hour_key
+      $redis.zadd day_keywords_key, day_timestamp, day_key
+      $redis.zadd month_keywords_key, month_timestamp, month_key
+      $redis.zadd year_keywords_key, year_timestamp, year_key
       $redis.incr minute_key
       $redis.incr hour_key
       $redis.incr day_key
@@ -83,42 +83,22 @@ class Keyword < Base
   end
 
   def minute_timestamp
-    Timestamp.new(@attributes['timestamp']).to_minute
+    Timestamp.new(@attributes['timestamp'], format: 'unix').to_minute
   end
 
   def hour_timestamp
-    Timestamp.new(@attributes['timestamp']).to_hour
+    Timestamp.new(@attributes['timestamp'], format: 'unix').to_hour
   end
 
   def day_timestamp
-    Timestamp.new(@attributes['timestamp']).to_day
+    Timestamp.new(@attributes['timestamp'], format: 'unix').to_day
   end
 
   def month_timestamp
-    Timestamp.new(@attributes['timestamp']).to_month
+    Timestamp.new(@attributes['timestamp'], format: 'unix').to_month
   end
 
   def year_timestamp
-    Timestamp.new(@attributes['timestamp']).to_year
-  end
-
-  def minute_timestamp_int
-    Timestamp.new(@attributes['timestamp']).to_minute_int
-  end
-
-  def hour_timestamp_int
-    Timestamp.new(@attributes['timestamp']).to_hour_int
-  end
-
-  def day_timestamp_int
-    Timestamp.new(@attributes['timestamp']).to_day_int
-  end
-
-  def month_timestamp_int
-    Timestamp.new(@attributes['timestamp']).to_month_int
-  end
-
-  def year_timestamp_int
-    Timestamp.new(@attributes['timestamp']).to_year_int
+    Timestamp.new(@attributes['timestamp'], format: 'unix').to_year
   end
 end

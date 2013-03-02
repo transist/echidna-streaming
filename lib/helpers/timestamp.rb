@@ -1,45 +1,52 @@
 class Timestamp
-  def initialize(timestamp)
-    @timestamp = timestamp
+  def initialize(timestamp, options={})
+    case options[:format]
+    when "unix"
+      @time = Time.at(timestamp).utc
+    when "plain"
+      @time = Time.parse(timestamp).utc
+    else
+      @time = timestamp.utc
+    end
   end
 
   def to_minute
-    @timestamp.to_s[0..15]
+    @time.change(sec: 0).to_i
   end
 
   def to_hour
-    @timestamp.to_s[0..12]
+    @time.beginning_of_hour.to_i
   end
 
   def to_day
-    @timestamp.to_s[0..9]
+    @time.beginning_of_day.to_i
   end
 
   def to_month
-    @timestamp.to_s[0..6]
+    @time.beginning_of_month.to_i
   end
 
   def to_year
-    @timestamp.to_s[0..3]
+    @time.beginning_of_year.to_i
   end
 
-  def to_minute_int
-    to_minute.gsub(/[^\d]/, '')
+  def to_formatted_minute
+    @time.strftime("%Y-%m-%dT%H:%M")
   end
 
-  def to_hour_int
-    to_hour.gsub(/[^\d]/, '')
+  def to_formatted_hour
+    @time.strftime("%Y-%m-%dT%H")
   end
 
-  def to_day_int
-    to_day.gsub(/[^\d]/, '')
+  def to_formatted_day
+    @time.strftime("%Y-%m-%d")
   end
 
-  def to_month_int
-    to_month.gsub(/[^\d]/, '')
+  def to_formatted_month
+    @time.strftime("%Y-%m")
   end
 
-  def to_year_int
-    to_year
+  def to_formatted_year
+    @time.strftime("%Y")
   end
 end

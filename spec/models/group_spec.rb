@@ -52,9 +52,9 @@ describe Group do
       Source.new("id" => "source-1", "url" => "http://t.qq.com/t/source-1").save
       Source.new("id" => "source-2", "url" => "http://t.qq.com/t/source-2").save
       Source.new("id" => "source-3", "url" => "http://t.qq.com/t/source-3").save
-      Keyword.new({"group_id" => "group-1", "timestamp" => "2013-02-22T00:55:34Z", "word" => "中国", "source_id" => "source-1"}).save
-      Keyword.new({"group_id" => "group-1", "timestamp" => "2013-02-22T00:57:18Z", "word" => "中国", "source_id" => "source-3"}).save
-      Keyword.new({"group_id" => "group-1", "timestamp" => "2013-02-22T00:55:34Z", "word" => "中间", "source_id" => "source-2"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => 1361494534, "word" => "中国", "source_id" => "source-1"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => 1361494638, "word" => "中国", "source_id" => "source-3"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => 1361494534, "word" => "中间", "source_id" => "source-2"}).save
     end
 
     it "should get trends when timestamp in the period" do
@@ -67,7 +67,7 @@ describe Group do
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-3" }
         ]
       })
-      expect(subject.trends('hour', "2013-02-22T00:00:00Z", "2013-02-22T09:00:00:Z")).to eq({
+      expect(subject.trends('hour', "2013-02-22T00:00:00Z", "2013-02-22T09:00:00Z")).to eq({
         "2013-02-22T00" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
