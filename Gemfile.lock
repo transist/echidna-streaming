@@ -1,3 +1,12 @@
+GIT
+  remote: git@github.com:transist/echidna-ruby.git
+  revision: 10638c0c72402934e785df387baa62ee5312d2bc
+  specs:
+    echidna-ruby (0.0.1)
+      hiredis
+      redis
+      redis-namespace
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -35,7 +44,7 @@ GEM
       rack (>= 0.9.1)
     rack-respond_to (0.9.8)
       rack-accept-media-types (>= 0.6)
-    redis (3.0.2)
+    redis (3.0.3)
     redis-namespace (1.2.1)
       redis (~> 3.0.0)
     rmmseg-cpp (0.2.9)
@@ -54,12 +63,10 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  echidna-ruby!
   em-synchrony
   goliath
-  hiredis
   multi_json
-  redis
-  redis-namespace
   rmmseg-cpp
   rspec
   yajl-ruby
