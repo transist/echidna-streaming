@@ -47,15 +47,21 @@ redis-cli publish e:d:add_user_to_group '{"group_id":"group-1","user_id":"user-1
 add tweet
 
 ```bash
-redis-cli publish e:d:add_tweet '{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":"20130222005534"}'
+redis-cli publish e:d:add_tweet '{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}'
 ```
 
 ## CLI
 
+Seed cities, tiers and groups data
+
+```bach
+ECHIDNA_STREAMING_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby bin/init_groups.rb
+```
+
 Query trends
 
 ```bash
-ECHIDNA_STREAMING_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby bin/trends_test.rb group-1 minute 20130222000000 20130222013000
+ECHIDNA_STREAMING_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby bin/trends_test.rb group-1 minute 2013-02-22T00:00:00Z 2013-02-22T01:30:00Z
 ```
 
 Start trends server
@@ -64,30 +70,24 @@ Start trends server
 ECHIDNA_STREAMING_ENV=development ECHIDNA_STREAMING_IP=0.0.0.0 ECHIDNA_STREAMING_PORT=9000 ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ECHIDNA_STREAMING_DAEMON=true ruby trends.rb
 ```
 
-Seed cities, tiers and groups data
-
-```bach
-ECHIDNA_STREAMING_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby bin/init_groups.rb
-```
-
 ## APIs
 
 Query trends
 
 ```bash
-curl "localhost:9000?group_id=group-1&interval=minute&start_timestamp=20130222000000&end_timestamp=20130222013000"
+curl "localhost:9000?group_id=group-1&interval=minute&start_timestamp=2013-02-22T00:00:00Z&end_timestamp=2013-02-22T01:30:00Z"
 
 {
-  "20130222005534":[
+  "2013-02-22T00:55":[
     {"word":"中国人","count":1,"source":"http://t.qq.com/t/abc"},
     {"word":"我是","count":1,"source":"http://t.qq.com/t/abc"}
   ]
 }
 
-curl "localhost:9000?group_id=group-1&interval=hour&start_timestamp=20130222000000&end_timestamp=20130222010000"
+curl "localhost:9000?group_id=group-1&interval=hour&start_timestamp=2013-02-22T00:00:00Z&end_timestamp=2013-02-22T01:00:00Z"
 
 {
-  "2013022200553":[
+  "2013-02-22T00":[
     {"word":"中国人","count":1,"source":"http://t.qq.com/t/abc"},
     {"word":"我是","count":1,"source":"http://t.qq.com/t/abc"}
   ]

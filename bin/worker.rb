@@ -15,59 +15,35 @@ $logger = Syslog.open("streaming worker", Syslog::LOG_PID | Syslog::LOG_CONS, Sy
 Dir[APP_ROOT.join("lib/helpers/*.rb")].each { |file| require_relative file }
 Dir[APP_ROOT.join("lib/models/*.rb")].each { |file| require_relative file }
 
-RMMSeg::Dictionary.load_dictionaries
-$logger.notice("load dictionaries")
+$redis = Redis::Namespace.new(redis_namespace, redis: Redis.new(host: redis_host, port: redis_port, driver: "hiredis"))
+$logger.notice("connect to redis: #{redis_host}:#{redis_port}/#{redis_namespace}")
 
-EM.synchrony do
-  $subscribe_redis = Redis::Namespace.new(redis_namespace, redis: Redis.new(host: redis_host, port: redis_port, driver: "synchrony"))
-  $redis = Redis::Namespace.new(redis_namespace, redis: Redis.new(host: redis_host, port: redis_port, driver: "hiredis"))
-  $logger.notice("connect to redis: #{redis_host}:#{redis_port}/#{redis_namespace}")
-
-  # publish e:d:add_user '{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}'
-  # publish e:d:add_group '{"id":"group-1","name":"Group 1"}'
-  # publish e:d:add_user_to_group '{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}'
-  # publish e:d:add_tweet '{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}'
-  $subscribe_redis.subscribe("add_user", "add_group", "add_user_to_group", "add_tweet", "add_word") do |on|
-    on.message do |channel, msg|
-      $logger.notice("redis receive message: #{msg} on channel: #{channel}")
-      attributes = MultiJson.decode(msg)
-      begin
-        case channel.split(":").last
-        when "add_user"
-          User.new(attributes).save
-        when "add_group"
-          Group.new(attributes).save
-        when "add_user_to_group"
-          user = User.new("id" => attributes["user_id"], "type" => attributes["user_type"])
-          Group.new("id" => attributes["group_id"]).add_user(user)
-        when "add_tweet"
-          source = Source.new(attributes)
-          unless source.exist?
-            source.save
-            group_id = User.new("id" => attributes["user_id"], "type" => attributes["user_type"])['group_id']
-            algorithm = RMMSeg::Algorithm.new(attributes['text'])
-            segments = []
-            loop do
-              token = algorithm.next_token
-              break if token.nil?
-              $redis.publish "add_word", '{}'
-              unless $redis.sismember "stopwords", token.text
-                $redis.rpush "word", MultiJson.encode(
-                  "group_id" => group_id,
-                  "timestamp" => attributes['timestamp'],
-                  "source_id" => attributes['id'],
-                  "word" => token.text
-                )
-              end
-            end
-          end
-        when "add_word"
-          word_attributes = MultiJson.decode($redis.lpop("word"))
-          Keyword.new(word_attributes).save
-        end
-      rescue
-        $logger.notice("error: #{$!.message}")
-      end
+# redis-cli lpush e:d:streaming/messages '{"type":"add_user","body":{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}}'
+# redis-cli lpush e:d:streaming/messages '{"type":"add_user_to_group","body":{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}}'
+# redis-cli lpush e:d:streaming/messages '{"type":"add_tweet","body":{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}}'
+while true
+  raw_message = $redis.brpop "streaming/messages", 0
+  $logger.notice("streaming receive message: #{raw_message}")
+  message = MultiJson.decode raw_message.last
+  case message["type"]
+  when "add_user"
+    User.new(message["body"]).save
+  when "add_user_to_group"
+    user = User.new("id" => message["body"]["user_id"], "type" => message["body"]["user_type"])
+    Group.new("id" => message["body"]["group_id"]).add_user(user)
+  when "add_tweet"
+    source = Source.new(message["body"])
+    unless source.exist?
+      source.save
+      group_id = User.new("id" => message["body"]["user_id"], "type" => message["body"]["user_type"])['group_id']
+      $redis.lpush "dicts/messages", MultiJson.encode(
+        type: "segment",
+        body: message["body"].slice("text", "timestamp").merge(group_id: group_id, source_id: message["body"]["id"])
+      )
+    end
+  when "add_words"
+    message["body"].delete("words").each do |word|
+      Keyword.new(message["body"].merge("word" => word)).save
     end
   end
 end
