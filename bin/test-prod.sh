@@ -1,5 +1,6 @@
 #!/bin/bash
 . /etc/systemd/conf.d/echidna
+export ECHIDNA_REDIS_NAMESPACE="e:${USER}:p"
 redis-cli publish ${ECHIDNA_REDIS_NAMESPACE}:add_user '{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}'
 redis-cli publish ${ECHIDNA_REDIS_NAMESPACE}:add_group '{"id":"group-1","name":"Group 1"}'
 redis-cli publish ${ECHIDNA_REDIS_NAMESPACE}:add_user_to_group '{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}'
