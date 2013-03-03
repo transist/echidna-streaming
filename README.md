@@ -23,7 +23,7 @@ brew install redis
 start worker
 
 ```bash
-ECHIDNA_STREAMING_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby bin/worker.rb
+ECHIDNA_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ruby bin/worker.rb
 ```
 
 add a user
@@ -55,19 +55,19 @@ redis-cli publish e:d:add_tweet '{"user_id":"user-1","user_type":"tencent","text
 Seed cities, tiers and groups data
 
 ```bach
-ECHIDNA_STREAMING_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby bin/init_groups.rb
+ECHIDNA_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ruby bin/init_groups.rb
 ```
 
 Query trends
 
 ```bash
-ECHIDNA_STREAMING_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ruby bin/trends_test.rb group-1 minute 2013-02-22T00:00:00Z 2013-02-22T01:30:00Z
+ECHIDNA_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ruby bin/trends_test.rb group-1 minute 2013-02-22T00:00:00Z 2013-02-22T01:30:00Z
 ```
 
 Start trends server
 
 ```bash
-ECHIDNA_STREAMING_ENV=development ECHIDNA_STREAMING_IP=0.0.0.0 ECHIDNA_STREAMING_PORT=9000 ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ECHIDNA_REDIS_NAMESPACE=e:d ECHIDNA_STREAMING_DAEMON=true ruby trends.rb
+ECHIDNA_ENV=development ECHIDNA_STREAMING_IP=0.0.0.0 ECHIDNA_STREAMING_PORT=9000 ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379  ECHIDNA_STREAMING_DAEMON=true ruby trends.rb
 ```
 
 ## APIs

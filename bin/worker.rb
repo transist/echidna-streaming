@@ -1,6 +1,6 @@
 # coding: utf-8
 require 'bundler'
-Bundler.require(:default, ENV['ECHIDNA_STREAMING_ENV'] || "development")
+Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 
 # redis-cli lpush e:d:streaming/messages '{"type":"add_user","body":{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}}'
 # redis-cli lpush e:d:streaming/messages '{"type":"add_user_to_group","body":{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}}'

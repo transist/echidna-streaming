@@ -1,15 +1,15 @@
 # coding: utf-8
-streaming_env = ENV['ECHIDNA_STREAMING_ENV'] || "development"
+echidna_env = ENV['ECHIDNA_ENV'] || "development"
 streaming_ip = ENV['ECHIDNA_STREAMING_IP'] || "0.0.0.0"
 streaming_port = ENV['ECHIDNA_STREAMING_PORT'] || "9001"
 streaming_daemon = ENV['ECHIDNA_STREAMING_DAEMON'] == "true"
 
-ARGV.replace ["-e", streaming_env, "-a", streaming_ip, "-p", streaming_port]
+ARGV.replace ["-e", echidna_env, "-a", streaming_ip, "-p", streaming_port]
 ARGV << "-d" if streaming_daemon
-ARGV << '-sv' if streaming_env == 'development'
+ARGV << '-sv' if echidna_env == 'development'
 
 require 'bundler'
-Bundler.require(:default, streaming_env)
+Bundler.require(:default, echidna_env)
 require 'goliath'
 
 class Trends < Goliath::API

@@ -1,8 +1,6 @@
 # coding: utf-8
-streaming_env = ENV['ECHIDNA_STREAMING_ENV'] || "development"
-
 require 'bundler'
-Bundler.require(:default, streaming_env.to_sym)
+Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 
 index = 1
 

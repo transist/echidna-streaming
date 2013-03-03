@@ -1,6 +1,6 @@
 # coding: utf-8
 require 'bundler'
-Bundler.require(:default, ENV['ECHIDNA_STREAMING_ENV'] || "development")
+Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 
 group_id, interval, start_timestamp, end_timestamp = *ARGV
 
