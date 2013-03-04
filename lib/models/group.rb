@@ -33,9 +33,9 @@ class Group < Base
     $redis.sadd self.class.key, self.key
   end
 
-  def trends(interval, start_time_str, end_time_str, limit=100)
-    start_timestamp = Timestamp.new(start_time_str, format: 'plain').send("to_#{interval}")
-    end_timestamp = Timestamp.new(end_time_str, format: 'plain').send("to_#{interval}")
+  def trends(interval, start_timestamp, end_timestamp, limit=100)
+    start_timestamp = Timestamp.new(start_timestamp).send("to_#{interval}")
+    end_timestamp = Timestamp.new(end_timestamp).send("to_#{interval}")
     interval_timestamp = 1.send(interval)
 
     trends = {}

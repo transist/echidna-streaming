@@ -1,13 +1,6 @@
 class Timestamp
-  def initialize(timestamp, options={})
-    case options[:format]
-    when "unix"
-      @time = Time.at(timestamp).utc
-    when "plain"
-      @time = Time.parse(timestamp).utc
-    else
-      @time = timestamp.utc
-    end
+  def initialize(timestamp)
+    @time = Time.at(timestamp).utc
   end
 
   def to_minute

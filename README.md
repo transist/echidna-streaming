@@ -75,7 +75,7 @@ ECHIDNA_ENV=development ECHIDNA_STREAMING_IP=0.0.0.0 ECHIDNA_STREAMING_PORT=9000
 Query trends
 
 ```bash
-curl "localhost:9000?group_id=group-1&interval=minute&start_timestamp=2013-02-22T00:00:00Z&end_timestamp=2013-02-22T01:30:00Z"
+curl "localhost:9000?group_id=group-1&interval=minute&start_time=2013-02-22T00:00:00Z&end_time=2013-02-22T01:30:00Z"
 
 {
   "2013-02-22T00:55":[
@@ -84,7 +84,7 @@ curl "localhost:9000?group_id=group-1&interval=minute&start_timestamp=2013-02-22
   ]
 }
 
-curl "localhost:9000?group_id=group-1&interval=hour&start_timestamp=2013-02-22T00:00:00Z&end_timestamp=2013-02-22T01:00:00Z"
+curl "localhost:9000?group_id=group-1&interval=hour&start_time=2013-02-22T00:00:00Z&end_time=2013-02-22T01:00:00Z"
 
 {
   "2013-02-22T00":[

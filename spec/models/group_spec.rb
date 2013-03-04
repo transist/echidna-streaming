@@ -58,7 +58,7 @@ describe Group do
     end
 
     it "should get trends when timestamp in the period" do
-      expect(subject.trends('minute', "2013-02-22T00:55:00Z", "2013-02-22T00:57:00Z")).to eq({
+      expect(subject.trends('minute', 1361494500, 1361494620)).to eq({
         "2013-02-22T00:55" => [
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" },
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-1" }
@@ -68,26 +68,26 @@ describe Group do
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-3" }
         ]
       })
-      expect(subject.trends('hour', "2013-02-22T00:00:00Z", "2013-02-22T01:00:00Z")).to eq({
+      expect(subject.trends('hour', 1361491200, 1361494800)).to eq({
         "2013-02-22T00" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ],
         "2013-02-22T01" => []
       })
-      expect(subject.trends('day', "2013-02-22T00:00:00Z", "2013-02-22T00:00:00Z")).to eq({
+      expect(subject.trends('day', 1361491200, 1361491200)).to eq({
         "2013-02-22" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
-      expect(subject.trends('month', "2013-02-01T00:00:00Z", "2013-02-01T00:00:00Z")).to eq({
+      expect(subject.trends('month', 1359676800, 1359676800)).to eq({
         "2013-02" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       })
-      expect(subject.trends('year', "2013-01-01T00:00:00Z", "2013-01-01T00:00:00Z")).to eq({
+      expect(subject.trends('year', 1356998400, 1356998400)).to eq({
         "2013" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }

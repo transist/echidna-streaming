@@ -79,22 +79,22 @@ class Keyword < Base
   end
 
   def minute_timestamp
-    Timestamp.new(@attributes['timestamp'], format: 'unix').to_minute
+    Timestamp.new(@attributes['timestamp']).to_minute
   end
 
   def hour_timestamp
-    Timestamp.new(@attributes['timestamp'], format: 'unix').to_hour
+    Timestamp.new(@attributes['timestamp']).to_hour
   end
 
   def day_timestamp
-    Timestamp.new(@attributes['timestamp'], format: 'unix').to_day
+    Timestamp.new(@attributes['timestamp']).to_day
   end
 
   def month_timestamp
-    Timestamp.new(@attributes['timestamp'], format: 'unix').to_month
+    Timestamp.new(@attributes['timestamp']).to_month
   end
 
   def year_timestamp
-    Timestamp.new(@attributes['timestamp'], format: 'unix').to_year
+    Timestamp.new(@attributes['timestamp']).to_year
   end
 end

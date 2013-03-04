@@ -19,7 +19,9 @@ class Trends < Goliath::API
     $logger.notice("#{env["REQUEST_PATH"]} api received: #{params}")
     case env["REQUEST_PATH"]
     when "/"
-      keywords = Group.new("id" => params["group_id"]).trends(params["interval"], params["start_timestamp"], params["end_timestamp"])
+      start_timestamp = Time.parse(params["start_time"]).to_i
+      end_timestamp = Time.parse(params["end_time"]).to_i
+      keywords = Group.new("id" => params["group_id"]).trends(params["interval"], start_timestamp, end_timestamp)
       [200, {}, MultiJson.encode(keywords)]
     when "/get_group_ids"
       group_ids = Group.find_group_ids(params["gender"], params["birth_year"], params["city"])
