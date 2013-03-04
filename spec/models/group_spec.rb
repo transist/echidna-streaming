@@ -58,20 +58,22 @@ describe Group do
     end
 
     it "should get trends when timestamp in the period" do
-      expect(subject.trends('minute', "2013-02-22T00:55:00Z", "2013-02-22T01:30:00Z")).to eq({
+      expect(subject.trends('minute', "2013-02-22T00:55:00Z", "2013-02-22T00:57:00Z")).to eq({
         "2013-02-22T00:55" => [
-          { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-1" },
-          { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
+          { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" },
+          { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-1" }
         ],
+        "2013-02-22T00:56" => [],
         "2013-02-22T00:57" => [
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-3" }
         ]
       })
-      expect(subject.trends('hour', "2013-02-22T00:00:00Z", "2013-02-22T09:00:00Z")).to eq({
+      expect(subject.trends('hour', "2013-02-22T00:00:00Z", "2013-02-22T01:00:00Z")).to eq({
         "2013-02-22T00" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
           { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
-        ]
+        ],
+        "2013-02-22T01" => []
       })
       expect(subject.trends('day', "2013-02-22T00:00:00Z", "2013-02-22T00:00:00Z")).to eq({
         "2013-02-22" => [

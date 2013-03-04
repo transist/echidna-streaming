@@ -12,20 +12,12 @@ describe Keyword do
       @keyword.save
     end
 
-    it "should add keywords to group sorted set" do
-      expect($redis.zrange @keyword.minute_keywords_key, 0, -1).to be_include @keyword.minute_key
-      expect($redis.zrange @keyword.hour_keywords_key, 0, -1).to be_include @keyword.hour_key
-      expect($redis.zrange @keyword.day_keywords_key, 0, -1).to be_include @keyword.day_key
-      expect($redis.zrange @keyword.month_keywords_key, 0, -1).to be_include @keyword.month_key
-      expect($redis.zrange @keyword.year_keywords_key, 0, -1).to be_include @keyword.year_key
-    end
-
-    it "should increment count for all keys" do
-      expect($redis.get @keyword.minute_key).to eq "1"
-      expect($redis.get @keyword.hour_key).to eq "1"
-      expect($redis.get @keyword.day_key).to eq "1"
-      expect($redis.get @keyword.month_key).to eq "1"
-      expect($redis.get @keyword.year_key).to eq "1"
+    it "should increment count for minute interval key" do
+      expect($redis.zrange @keyword.minute_interval_key, 0, -1, with_scores: true).to be_include ["中国", 1.0]
+      expect($redis.zrange @keyword.hour_interval_key, 0, -1, with_scores: true).to be_include ["中国", 1.0]
+      expect($redis.zrange @keyword.day_interval_key, 0, -1, with_scores: true).to be_include ["中国", 1.0]
+      expect($redis.zrange @keyword.month_interval_key, 0, -1, with_scores: true).to be_include ["中国", 1.0]
+      expect($redis.zrange @keyword.year_interval_key, 0, -1, with_scores: true).to be_include ["中国", 1.0]
     end
 
     it "should set source_id" do
@@ -40,11 +32,6 @@ describe Keyword do
   context "keys" do
     subject { Keyword.new({"group_id" => "group-1", "timestamp" => 1361465734, "word" => "中国"}) }
 
-    its(:minute_key) { should eq "groups/group-1/minute/1361465700/中国" }
-    its(:hour_key) { should eq "groups/group-1/hour/1361462400/中国" }
-    its(:day_key) { should eq "groups/group-1/day/1361404800/中国" }
-    its(:month_key) { should eq "groups/group-1/month/1359676800/中国" }
-    its(:year_key) { should eq "groups/group-1/year/1356998400/中国" }
     its(:minute_source_id_key) { should eq "groups/group-1/minute/1361465700/中国/source_id" }
     its(:hour_source_id_key) { should eq "groups/group-1/hour/1361462400/中国/source_id" }
     its(:day_source_id_key) { should eq "groups/group-1/day/1361404800/中国/source_id" }

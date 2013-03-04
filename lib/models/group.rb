@@ -33,21 +33,22 @@ class Group < Base
     $redis.sadd self.class.key, self.key
   end
 
-  def trends(interval, start_timestamp, end_timestamp, limit=100)
-    keys = $redis.zrangebyscore "groups/#{@attributes['id']}/#{interval}/keywords",
-                                Timestamp.new(start_timestamp, format: 'plain').send("to_#{interval}"),
-                                Timestamp.new(end_timestamp, format: 'plain').send("to_#{interval}")
+  def trends(interval, start_time_str, end_time_str, limit=100)
+    start_timestamp = Timestamp.new(start_time_str, format: 'plain').send("to_#{interval}")
+    end_timestamp = Timestamp.new(end_time_str, format: 'plain').send("to_#{interval}")
+    interval_timestamp = 1.send(interval)
+
     trends = {}
-    keys.each do |key|
-      count = $redis.get(key).to_i
-      _, _, _, timestamp, word = key.split('/')
-      source_url = Source.new("id" => $redis.get(key + "/source_id")).url
-      timestamp = Timestamp.new(Time.at(timestamp.to_i)).send("to_formatted_#{interval}")
+    while (start_timestamp <= end_timestamp)
+      timestamp = Timestamp.new(Time.at(start_timestamp.to_i)).send("to_formatted_#{interval}")
       trends[timestamp] ||= []
-      trends[timestamp] << {"word" => word, "count" => count, "source" => source_url}
-    end
-    trends.each do |timestamp, keywords|
-      keywords.sort_by! { |hash| -hash["count"] }
+      result = $redis.zrevrange "groups/#{@attributes['id']}/#{interval}/#{start_timestamp}/keywords", 0, limit - 1, with_scores: true
+      result.each do |word, count|
+        source_id = $redis.get("groups/#{@attributes['id']}/#{interval}/#{start_timestamp}/#{word}/source_id")
+        source_url = Source.new("id" => source_id).url
+        trends[timestamp] << {"word" => word, "count" => count.to_i, "source" => source_url}
+      end
+      start_timestamp += interval_timestamp
     end
     trends
   end

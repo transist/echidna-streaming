@@ -9,37 +9,13 @@ class Keyword < Base
       $redis.set day_source_id_key, @attributes['source_id']
       $redis.set month_source_id_key, @attributes['source_id']
       $redis.set year_source_id_key, @attributes['source_id']
-      $redis.zadd minute_keywords_key, minute_timestamp, minute_key
-      $redis.zadd hour_keywords_key, hour_timestamp, hour_key
-      $redis.zadd day_keywords_key, day_timestamp, day_key
-      $redis.zadd month_keywords_key, month_timestamp, month_key
-      $redis.zadd year_keywords_key, year_timestamp, year_key
-      $redis.incr minute_key
-      $redis.incr hour_key
-      $redis.incr day_key
-      $redis.incr month_key
-      $redis.incr year_key
+
+      $redis.zincrby minute_interval_key, 1, @attributes['word']
+      $redis.zincrby hour_interval_key, 1, @attributes['word']
+      $redis.zincrby day_interval_key, 1, @attributes['word']
+      $redis.zincrby month_interval_key, 1, @attributes['word']
+      $redis.zincrby year_interval_key, 1, @attributes['word']
     end
-  end
-
-  def minute_key
-    "groups/#{@attributes['group_id']}/minute/#{minute_timestamp}/#{@attributes['word']}"
-  end
-
-  def hour_key
-    "groups/#{@attributes['group_id']}/hour/#{hour_timestamp}/#{@attributes['word']}"
-  end
-
-  def day_key
-    "groups/#{@attributes['group_id']}/day/#{day_timestamp}/#{@attributes['word']}"
-  end
-
-  def month_key
-    "groups/#{@attributes['group_id']}/month/#{month_timestamp}/#{@attributes['word']}"
-  end
-
-  def year_key
-    "groups/#{@attributes['group_id']}/year/#{year_timestamp}/#{@attributes['word']}"
   end
 
   def minute_source_id_key
@@ -80,6 +56,26 @@ class Keyword < Base
 
   def year_keywords_key
     "groups/#{@attributes['group_id']}/year/keywords"
+  end
+
+  def minute_interval_key
+    "groups/#{@attributes['group_id']}/minute/#{minute_timestamp}/keywords"
+  end
+
+  def hour_interval_key
+    "groups/#{@attributes['group_id']}/hour/#{hour_timestamp}/keywords"
+  end
+
+  def day_interval_key
+    "groups/#{@attributes['group_id']}/day/#{day_timestamp}/keywords"
+  end
+
+  def month_interval_key
+    "groups/#{@attributes['group_id']}/month/#{month_timestamp}/keywords"
+  end
+
+  def year_interval_key
+    "groups/#{@attributes['group_id']}/year/#{year_timestamp}/keywords"
   end
 
   def minute_timestamp
