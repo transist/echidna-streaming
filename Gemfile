@@ -14,7 +14,7 @@ gem 'activesupport', require: [
 
 gem 'goliath', require: false
 
-gem 'echidna-ruby', require: 'echidna/all', git: "git@github.com:transist/echidna-ruby.git"
+gem 'echidna-env', path: 'echidna-env', require: 'echidna/all'
 
 group :test do
   gem 'rspec'
