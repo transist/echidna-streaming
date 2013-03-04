@@ -30,6 +30,6 @@ while true
       Keyword.new(message["body"].merge("word" => word)).save
     end
     result = Crontab.new("timestamp" => message["body"]["timestamp"], "group_id" => message["body"]["group_id"]).fetch_and_save
-    $redis.lpush "api/messages", MultiJson.encode(result)
+    $redis.lpush "api/messages/#{message['body']['group_id']}/trends", MultiJson.encode(result)
   end
 end
