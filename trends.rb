@@ -6,7 +6,7 @@ Bundler.require(:default, echidna_env)
 require 'goliath'
 
 streaming_ip = ENV['ECHIDNA_STREAMING_IP'] || "0.0.0.0"
-streaming_port = ENV['ECHIDNA_STREAMING_PORT'] || "9001"
+streaming_port = app_port('streaming')
 streaming_daemon = ENV['ECHIDNA_STREAMING_DAEMON'] == "true"
 
 ARGV.replace ["-e", echidna_env, "-a", streaming_ip, "-p", streaming_port]
