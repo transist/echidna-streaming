@@ -5,7 +5,7 @@ Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 index = 1
 
 genders = ["male", "female"]
-birth_years = [[1968, 1974], [1975, 1981], [1982, 1988], [1989, 1995], [1996, 2000]]
+birth_years = [[1947, 1953], [1954, 1960], [1961, 1967], [1968, 1974], [1975, 1981], [1982, 1988], [1989, 1995], [1996, 2002], [2003, 2009], [2010, 2013]]
 
 Tier.new("id" => "tier-1", "name" => "Tier 1").save
 genders.each do |gender|
