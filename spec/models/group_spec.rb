@@ -52,10 +52,19 @@ describe Group do
       Group.new("id" => "group-4", "name" => "Group 4", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "北京").save
       Group.new("id" => "group-5", "name" => "Group 5", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "tier_id" => "tier-2").save
       Group.new("id" => "group-6", "name" => "Group 6", "gender" => "both", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "北京").save
+
+      Tier.new("id" => "tier-other", "name" => "Other Tier").save
+      Group.new("id" => "group-other", "name" => "Other Group", "gender" => "", "start_birth_year" => 0, "end_birth_year" => 0, "tier" => "tier-other").save
     end
 
     it "should get group-1" do
       expect(Group.find_group_ids("female", "1994", "上海")).to eq ["group-2", "group-3", "group-1"]
+    end
+
+    it "should get group-other" do
+      expect(Group.find_group_ids("", "1984", "上海")).to eq ["group-other"]
+      expect(Group.find_group_ids("female", "0", "上海")).to eq ["group-other"]
+      expect(Group.find_group_ids("female", "1984", "西藏")).to eq ["group-other"]
     end
   end
 

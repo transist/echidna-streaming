@@ -11,7 +11,8 @@ class Group < Base
     end
 
     def find_group_ids(gender, birth_year, city)
-      [find_tier_group(gender, birth_year, city), find_city_group(gender, birth_year, city)].compact.flatten
+      group_ids = [find_tier_group(gender, birth_year, city), find_city_group(gender, birth_year, city)].compact.flatten
+      group_ids.empty? ? ['group-other'] : group_ids
     end
 
     def find_tier_group(gender, birth_year, city)
