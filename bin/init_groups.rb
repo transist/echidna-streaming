@@ -26,3 +26,6 @@ tiers_data.each do |tier_data|
     end
   end
 end
+
+Tier.new("id" => "tier-other", "name" => "Other Tier").save
+Group.new("id" => "group-other", "name" => "Other Group", "gender" => "", "start_birth_year" => 0, "end_birth_year" => 0, "tier_id" => "tier-other").save
