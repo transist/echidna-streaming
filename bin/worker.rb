@@ -2,9 +2,9 @@
 require 'bundler'
 Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 
-# redis-cli lpush e:d:streaming/messages '{"type":"add_user","body":{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}}'
-# redis-cli lpush e:d:streaming/messages '{"type":"add_user_to_group","body":{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}}'
-# redis-cli lpush e:d:streaming/messages '{"type":"add_tweet","body":{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}}'
+# redis-cli lpush e:flyerhzm:d:streaming/messages '{"type":"add_user","body":{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}}'
+# redis-cli lpush e:flyerhzm:d:streaming/messages '{"type":"add_user_to_group","body":{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}}'
+# redis-cli lpush e:flyerhzm:d:streaming/messages '{"type":"add_tweet","body":{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}}'
 while true
   raw_message = $redis.blpop "streaming/messages", 0
   $logger.notice("streaming receive message: #{raw_message}")
