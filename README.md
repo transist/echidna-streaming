@@ -102,6 +102,24 @@ curl "http://localhost:9000/get_group_ids?gender=female&birth_year=1993&city=%E4
 {"ids":["group-1","group-2"]}
 ```
 
+Fetch all tiers
+
+```bash
+curl http://localhost:62303/tiers
+
+[{"name":"Tier 1","id":"tier-1","cities":["北京","上海","深圳","天津","重庆","广州"]},{"name":"Other Tier","id":"tier-other","cities":[]},{"name":"Tier 2","id":"tier-2","cities":["佛山","东莞","温州","厦门","武汉","贵阳","宁波","长沙","唐山","哈尔滨","南京","呼和浩特","青岛","郑州","昆明","常州","无锡","包头","烟台","南通","兰州","杭州","南昌","长春","济南","西安","准二线","石家庄","太原","福州","乌鲁木齐","成都","大连","合肥","南宁","邯郸","苏州","沈阳","徐州","泉州"]}]
+```
+
+Fetch all groups
+
+```bash
+curl http://localhost:62303/groups
+
+[{"name":"Group
+1","gender":"female","start_birth_year":"1989","end_birth_year":"1995","city":"上海","id":"group-1"},{"name":"Group
+2","gender":"male","start_birth_year":"1996","end_birth_year":"2002","tier-id":"tier-2","id":"group-2"}]
+```
+
 ## Test
 
 ```bash

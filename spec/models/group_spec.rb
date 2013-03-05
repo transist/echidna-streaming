@@ -12,6 +12,32 @@ describe Group do
     end
   end
 
+  context ".all" do
+    before do
+      tier = Tier.new("id" => "tier-1", "name" => "Tier 1")
+      tier.save
+      tier.add_city("上海")
+      Group.new("id" => "group-1", "name" => "Group 1", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "上海").save
+      Group.new("id" => "group-2", "name" => "Group 2", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "tier_id" => "tier-1").save
+      Group.new("id" => "group-3", "name" => "Group 3", "gender" => "both", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "上海").save
+      tier = Tier.new("id" => "tier-2", "name" => "Tier 2")
+      tier.save
+      tier.add_city("北京")
+      Group.new("id" => "group-4", "name" => "Group 4", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "北京").save
+      Group.new("id" => "group-5", "name" => "Group 5", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "tier_id" => "tier-2").save
+      Group.new("id" => "group-6", "name" => "Group 6", "gender" => "both", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "北京").save
+    end
+
+    it "should get all groups" do
+      expect(Group.all).to include({"id" => "group-1", "name" => "Group 1", "gender" => "female", "start_birth_year" => "1993", "end_birth_year" => "1995", "city" => "上海"})
+      expect(Group.all).to include({"id" => "group-2", "name" => "Group 2", "gender" => "female", "start_birth_year" => "1993", "end_birth_year" => "1995", "tier_id" => "tier-1"})
+      expect(Group.all).to include({"id" => "group-3", "name" => "Group 3", "gender" => "both", "start_birth_year" => "1993", "end_birth_year" => "1995", "city" => "上海"})
+      expect(Group.all).to include({"id" => "group-4", "name" => "Group 4", "gender" => "female", "start_birth_year" => "1993", "end_birth_year" => "1995", "city" => "北京"})
+      expect(Group.all).to include({"id" => "group-5", "name" => "Group 5", "gender" => "female", "start_birth_year" => "1993", "end_birth_year" => "1995", "tier_id" => "tier-2"})
+      expect(Group.all).to include({"id" => "group-6", "name" => "Group 6", "gender" => "both", "start_birth_year" => "1993", "end_birth_year" => "1995", "city" => "北京"})
+    end
+  end
+
   context ".find_group_ids" do
     before do
       tier = Tier.new("id" => "tier-1", "name" => "Tier 1")
