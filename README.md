@@ -29,25 +29,19 @@ ECHIDNA_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 rub
 add a user
 
 ```bash
-redis-cli publish e:d:add_user '{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}'
-```
-
-add a group
-
-```bash
-redis-cli publish e:d:add_group '{"id":"group-1","name":"Group 1"}'
+redis-cli lpush e:flyerhzm:d:streaming/messages '{"type":"add_user","body":{"id":"user-1","type":"tencent","birth_year":2000,"gender":"f","city":"shanghai"}}'
 ```
 
 add user to group
 
 ```bash
-redis-cli publish e:d:add_user_to_group '{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}'
+redis-cli lpush e:flyerhzm:d:streaming/messages '{"type":"add_user_to_group","body":{"group_id":"group-1","user_id":"user-1","user_type":"tencent"}}'
 ```
 
 add tweet
 
 ```bash
-redis-cli publish e:d:add_tweet '{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}'
+redis-cli lpush e:flyerhzm:d:streaming/messages '{"type":"add_tweet","body":{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}}'
 ```
 
 ## CLI
