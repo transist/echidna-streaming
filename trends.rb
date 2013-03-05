@@ -31,8 +31,11 @@ class Trends < Goliath::API
       groups = Group.all
       [200, {}, MultiJson.encode(groups)]
     when "/get_group_ids"
-      group_ids = Group.find_group_ids(params["gender"], params["birth_year"], params["city"])
-      [200, {}, MultiJson.encode("ids" => group_ids)]
+      response_body = $cacher.fetch "cache/#{params.slice('gender', 'birth_year', 'city').values.join('/')}/group_ids", :expires_in => 86400 do
+        group_ids = Group.find_group_ids(params["gender"], params["birth_year"], params["city"])
+        MultiJson.encode("ids" => group_ids)
+      end
+      [200, {}, response_body]
     end
   end
 end
