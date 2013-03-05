@@ -19,15 +19,17 @@ describe Group do
       tier.add_city("上海")
       Group.new("id" => "group-1", "name" => "Group 1", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "上海").save
       Group.new("id" => "group-2", "name" => "Group 2", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "tier_id" => "tier-1").save
+      Group.new("id" => "group-3", "name" => "Group 3", "gender" => "both", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "上海").save
       tier = Tier.new("id" => "tier-2", "name" => "Tier 2")
       tier.save
       tier.add_city("北京")
-      Group.new("id" => "group-3", "name" => "Group 3", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "北京").save
-      Group.new("id" => "group-4", "name" => "Group 4", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "tier_id" => "tier-2").save
+      Group.new("id" => "group-4", "name" => "Group 4", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "北京").save
+      Group.new("id" => "group-5", "name" => "Group 5", "gender" => "female", "start_birth_year" => 1993, "end_birth_year" => 1995, "tier_id" => "tier-2").save
+      Group.new("id" => "group-6", "name" => "Group 6", "gender" => "both", "start_birth_year" => 1993, "end_birth_year" => 1995, "city" => "北京").save
     end
 
     it "should get group-1" do
-      expect(Group.find_group_ids("female", "1994", "上海")).to eq ["group-2", "group-1"]
+      expect(Group.find_group_ids("female", "1994", "上海")).to eq ["group-2", "group-3", "group-1"]
     end
   end
 

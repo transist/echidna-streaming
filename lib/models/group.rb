@@ -4,28 +4,34 @@ require 'set'
 
 class Group < Base
   def self.find_group_ids(gender, birth_year, city)
-    [self.find_tier_group(gender, birth_year, city), self.find_city_group(gender, birth_year, city)].compact
+    [self.find_tier_group(gender, birth_year, city), self.find_city_group(gender, birth_year, city)].compact.flatten
   end
 
   def self.find_tier_group(gender, birth_year, city)
     tier_id = City.new("name" => city)["tier_id"] || "tier-other"
+    groups = []
     $redis.smembers(self.key).each do |group_key|
       group = Group.new_with_key(group_key, $redis.hgetall(group_key))
-      if group['gender'] == gender && birth_year.to_i >= group['start_birth_year'].to_i && birth_year.to_i <= group['end_birth_year'].to_i && tier_id == group['tier_id']
-        return group.key.split('/').last
+      if (group['gender'] == gender || group['gender'] == 'both') &&
+         birth_year.to_i >= group['start_birth_year'].to_i && birth_year.to_i <= group['end_birth_year'].to_i &&
+         tier_id == group['tier_id']
+        groups << group.key.split('/').last
       end
     end
-    nil
+    groups
   end
 
   def self.find_city_group(gender, birth_year, city)
+    groups = []
     $redis.smembers(self.key).each do |group_key|
       group = Group.new_with_key(group_key, $redis.hgetall(group_key))
-      if group['gender'] == gender && birth_year.to_i >= group['start_birth_year'].to_i && birth_year.to_i <= group['end_birth_year'].to_i && city == group['city']
-        return group.key.split('/').last
+      if (group['gender'] == gender || group['gender'] == 'both') &&
+         birth_year.to_i >= group['start_birth_year'].to_i && birth_year.to_i <= group['end_birth_year'].to_i &&
+         city == group['city']
+        groups << group.key.split('/').last
       end
     end
-    nil
+    groups
   end
 
   def save
