@@ -30,7 +30,13 @@ class Trends < Goliath::API
     when "/groups"
       groups = Group.all
       [200, {}, MultiJson.encode(groups)]
-    when "/get_group_ids"
+    when "/group_id" # for echidna-api
+      response_body = $cacher.fetch "cache/#{params.slice('gender', 'age_range', 'tier_id').values.join('/')}/group_id", :expires_in => 86400 do
+        group_id = Group.find_tier_group_id(params["gender"], params["age_range"], params["tier_id"])
+        response_body = MultiJson.encode("id" => group_id)
+      end
+      [200, {}, response_body]
+    when "/get_group_ids" # for echidna-spider
       response_body = $cacher.fetch "cache/#{params.slice('gender', 'birth_year', 'city').values.join('/')}/group_ids", :expires_in => 86400 do
         group_ids = Group.find_group_ids(params["gender"], params["birth_year"], params["city"])
         MultiJson.encode("ids" => group_ids)

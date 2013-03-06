@@ -88,12 +88,20 @@ curl "localhost:9000?group_id=group-1&interval=hour&start_time=2013-02-22T00:00:
 }
 ```
 
-Query group
+Query group for echidna-spider
 
 ```bash
 curl "http://localhost:9000/get_group_ids?gender=female&birth_year=1993&city=%E4%B8%8A%E6%B5%B7"
 
 {"ids":["group-1","group-2"]}
+```
+
+Query group for echidna-api
+
+```bash
+curl "http://localhost:9000/group_id?gender=Women&birth_year=18-&tier_id=tier-1"
+
+{"id":"group-1"}
 ```
 
 Fetch all tiers

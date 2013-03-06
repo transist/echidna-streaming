@@ -21,7 +21,7 @@ tiers_data.each do |tier_data|
         Group.new("id" => "group-#{index}", "name" => "Group #{index}", "gender" => gender_data, "start_birth_year" => start_birth_year_data, "end_birth_year" => end_birth_year_data, "city" => city_data).save
         index += 1
       end
-      Group.new("id" => "group-#{index}", "name" => "Group #{index}", "gender" => gender_data, "start_birth_year" => start_birth_year_data, "end_birth_year" => end_birth_year_data, "tier_id" => tier["id"]).save
+      Group.new("id" => "group-#{index}", "name" => "Group #{index}", "gender" => gender_data, "start_birth_year" => start_birth_year_data, "end_birth_year" => end_birth_year_data, "tier_id" => tier_data["id"]).save
       index += 1
     end
   end

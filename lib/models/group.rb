@@ -3,11 +3,28 @@ require_relative 'base'
 require 'set'
 
 class Group < Base
+  GENDERS = {"Men" => "male", "Women" => "female", "Both" => "both"}
+  AGE_RANGES = {'18-' => [1989, 1995], '24-' => [1978, 1989], '35-' => [1973, 1978], '40+' => [1900, 1973], 'All' => [1900, 1989]}
+
   class <<self
     def all
       $redis.smembers(self.key).map do |group_key|
         $redis.hgetall(group_key).merge("id" => group_key.split('/').last)
       end
+    end
+
+    def find_tier_group_id(gender, age_range, tier)
+      gender = GENDERS[gender]
+      start_birth_year, end_birth_year = AGE_RANGES[age_range]
+      $redis.smembers(self.key).each do |group_key|
+        group = Group.new_with_key(group_key, $redis.hgetall(group_key))
+        if (group['gender'] == gender || group['gender'] == 'both') &&
+           start_birth_year.to_i >= group['start_birth_year'].to_i && #end_birth_year.to_i <= group['end_birth_year'].to_i &&
+           tier == group['tier_id']
+          return group_key.split('/').last
+        end
+      end
+      nil
     end
 
     def find_group_ids(gender, birth_year, city)

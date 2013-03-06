@@ -68,6 +68,27 @@ describe Group do
     end
   end
 
+  context ".find_tier_group_ids" do
+    before do
+      Tier.new("id" => "tier-1", "name" => "Tier 1").save
+      Tier.new("id" => "tier-2", "name" => "Tier 2").save
+
+      Group.new("id" => "group-1", "name" => "Group 1", "gender" => "male", "start_birth_year" => 1989, "end_birth_year" => 1995, "tier_id" => "tier-1").save
+      Group.new("id" => "group-2", "name" => "Group 2", "gender" => "female", "start_birth_year" => 1982, "end_birth_year" => 1988, "tier_id" => "tier-2").save
+      Group.new("id" => "group-other", "name" => "Group Other", "gender" => "Both", "start_birth_year" => 1982, "end_birth_year" => 1988, "tier_id" => "tier-other").save
+    end
+
+    it "should get group-1" do
+      expect(Group.find_tier_group_id("Men", "18-", "tier-1")).to eq "group-1"
+    end
+
+    #it "should get group-other" do
+      #expect(Group.find_group_ids("", "1984", "上海")).to eq ["group-other"]
+      #expect(Group.find_group_ids("female", "0", "上海")).to eq ["group-other"]
+      #expect(Group.find_group_ids("female", "1984", "西藏")).to eq ["group-other"]
+    #end
+  end
+
   context "#save" do
     before do
       Group.new({"id" => "group-1", "name" => "Group 1", "gender" => "female", "start_age" => 18, "end_age" => 24, "tier" => "Tier 1"}).save
