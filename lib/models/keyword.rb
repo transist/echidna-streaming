@@ -4,18 +4,24 @@ require_relative 'base'
 class Keyword < Base
   def save
     $redis.multi do
+      $redis.set second_source_id_key, @attributes['source_id']
       $redis.set minute_source_id_key, @attributes['source_id']
       $redis.set hour_source_id_key, @attributes['source_id']
       $redis.set day_source_id_key, @attributes['source_id']
       $redis.set month_source_id_key, @attributes['source_id']
       $redis.set year_source_id_key, @attributes['source_id']
 
+      $redis.zincrby second_interval_key, 1, @attributes['word']
       $redis.zincrby minute_interval_key, 1, @attributes['word']
       $redis.zincrby hour_interval_key, 1, @attributes['word']
       $redis.zincrby day_interval_key, 1, @attributes['word']
       $redis.zincrby month_interval_key, 1, @attributes['word']
       $redis.zincrby year_interval_key, 1, @attributes['word']
     end
+  end
+
+  def second_source_id_key
+    "groups/#{@attributes['group_id']}/second/#{second_timestamp}/#{@attributes['word']}/source_id"
   end
 
   def minute_source_id_key
@@ -38,6 +44,10 @@ class Keyword < Base
     "groups/#{@attributes['group_id']}/year/#{year_timestamp}/#{@attributes['word']}/source_id"
   end
 
+  def second_keywords_key
+    "groups/#{@attributes['group_id']}/second/keywords"
+  end
+
   def minute_keywords_key
     "groups/#{@attributes['group_id']}/minute/keywords"
   end
@@ -58,6 +68,10 @@ class Keyword < Base
     "groups/#{@attributes['group_id']}/year/keywords"
   end
 
+  def second_interval_key
+    "groups/#{@attributes['group_id']}/second/#{second_timestamp}/keywords"
+  end
+
   def minute_interval_key
     "groups/#{@attributes['group_id']}/minute/#{minute_timestamp}/keywords"
   end
@@ -76,6 +90,10 @@ class Keyword < Base
 
   def year_interval_key
     "groups/#{@attributes['group_id']}/year/#{year_timestamp}/keywords"
+  end
+
+  def second_timestamp
+    Timestamp.new(@attributes['timestamp']).to_second
   end
 
   def minute_timestamp

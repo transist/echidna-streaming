@@ -3,6 +3,10 @@ class Timestamp
     @time = Time.at(timestamp).utc
   end
 
+  def to_second
+    @time.to_i
+  end
+
   def to_minute
     @time.change(sec: 0).to_i
   end
@@ -21,6 +25,10 @@ class Timestamp
 
   def to_year
     @time.beginning_of_year.to_i
+  end
+
+  def to_formatted_second
+    @time.strftime("%Y-%m-%dT%H:%M:%S")
   end
 
   def to_formatted_minute

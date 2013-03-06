@@ -116,6 +116,18 @@ describe Group do
     end
 
     it "should get trends when timestamp in the period" do
+      expect(subject.trends('second', 1361494534, 1361494535)).to eq([{
+        "type" => "second",
+        "time" => "2013-02-22T00:55:34",
+        "words" => [
+          { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" },
+          { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-1" }
+        ]
+      }, {
+        "type" => "second",
+        "time" => "2013-02-22T00:55:35",
+        "words" => []
+      }])
       expect(subject.trends('minute', 1361494500, 1361494620)).to eq([{
         "type" => "minute",
         "time" => "2013-02-22T00:55",
