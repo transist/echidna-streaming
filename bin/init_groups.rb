@@ -2,6 +2,8 @@
 require 'bundler'
 Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 
+puts "Start creating groups..."
+
 index = 1
 
 genders_data = MultiJson.decode(File.read("echidna-data/data/genders.json"))["genders"]
@@ -29,3 +31,5 @@ end
 
 Tier.new("id" => "tier-other", "name" => "Other Tier").save
 Group.new("id" => "group-other", "name" => "Other Group", "gender" => "", "start_birth_year" => 0, "end_birth_year" => 0, "tier_id" => "tier-other").save
+
+puts "Finish creating groups"
