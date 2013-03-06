@@ -8,7 +8,7 @@ Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 while true
   $redis.incr "streaming/messages/incoming"
   raw_message = $redis.blpop "streaming/messages", 0
-  $logger.notice("streaming receive message: #{raw_message.replace('%', '%%')}")
+  $logger.notice("streaming receive message: #{raw_message.last.gsub('%', '%%')}")
   message = MultiJson.decode raw_message.last
   case message["type"]
   when "add_user"
