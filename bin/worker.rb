@@ -7,7 +7,7 @@ Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 # redis-cli lpush e:flyerhzm:d:streaming/messages '{"type":"add_tweet","body":{"user_id":"user-1","user_type":"tencent","text":"我是中国人","id":"abc","url":"http://t.qq.com/t/abc","timestamp":1361494534}}'
 while true
   $redis.incr "streaming/messages/incoming"
-  raw_message = $redis.blpop "streaming/messages", 0
+  raw_message = $redis.brpop "streaming/messages", 0
   $logger.notice("streaming receive message: #{raw_message.last.gsub('%', '%%')}")
   message = MultiJson.decode raw_message.last
   case message["type"]
@@ -21,7 +21,7 @@ while true
     unless source.exist?
       source.save
       group_id = User.new("id" => message["body"]["user_id"], "type" => message["body"]["user_type"])['group_id']
-      $redis.rpush "dicts/messages", MultiJson.encode(
+      $redis.lpush "dicts/messages", MultiJson.encode(
         type: "segment",
         body: message["body"].slice("text", "timestamp").merge(group_id: group_id, source_id: message["body"]["id"])
       )
@@ -31,7 +31,7 @@ while true
       Keyword.new(message["body"].merge("word" => word)).save
     end
     result = Crontab.new("timestamp" => message["body"]["timestamp"], "group_id" => message["body"]["group_id"]).fetch_and_save
-    $redis.rpush "api/messages/#{message['body']['group_id']}/trends", MultiJson.encode(result)
+    $redis.lpush "api/messages/#{message['body']['group_id']}/trends", MultiJson.encode(result)
     $redis.ltrim "api/messages/#{message['body']['group_id']}/trends", 0, 999
   end
   $redis.incr "streaming/messages/outgoing"
