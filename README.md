@@ -99,7 +99,7 @@ curl "http://localhost:9000/get_group_ids?gender=female&birth_year=1993&city=%E4
 Query group for echidna-api
 
 ```bash
-curl "http://localhost:9000/group_id?gender=Women&birth_year=18-&tier_id=tier-1"
+curl "http://localhost:9000/group_id?gender=Women&age_range=18-&tier_id=1"
 
 {"id":"group-1"}
 ```
