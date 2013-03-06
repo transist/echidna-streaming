@@ -53,16 +53,19 @@ class Group < Base
     end_timestamp = Timestamp.new(end_timestamp).send("to_#{interval}")
     interval_timestamp = 1.send(interval)
 
-    trends = {}
+    trends = []
     while (start_timestamp <= end_timestamp)
       timestamp = Timestamp.new(Time.at(start_timestamp.to_i)).send("to_formatted_#{interval}")
-      trends[timestamp] ||= []
+      interval_trends = {"type" => interval, "time" => timestamp}
       result = $redis.zrevrange "groups/#{@attributes['id']}/#{interval}/#{start_timestamp}/keywords", 0, limit - 1, with_scores: true
+      words = []
       result.each do |word, count|
         source_id = $redis.get("groups/#{@attributes['id']}/#{interval}/#{start_timestamp}/#{word}/source_id")
         source_url = Source.new("id" => source_id).url
-        trends[timestamp] << {"word" => word, "count" => count.to_i, "source" => source_url}
+        words << {"word" => word, "count" => count.to_i, "source" => source_url}
       end
+      interval_trends["words"] = words
+      trends << interval_trends
       start_timestamp += interval_timestamp
     end
     trends
