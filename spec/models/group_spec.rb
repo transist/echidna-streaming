@@ -112,7 +112,7 @@ describe Group do
       Source.new("id" => "source-3", "url" => "http://t.qq.com/t/source-3").save
       Keyword.new({"group_id" => "group-1", "timestamp" => 1361494534, "word" => "中国", "source_id" => "source-1"}).save
       Keyword.new({"group_id" => "group-1", "timestamp" => 1361494638, "word" => "中国", "source_id" => "source-3"}).save
-      Keyword.new({"group_id" => "group-1", "timestamp" => 1361494534, "word" => "中间", "source_id" => "source-2"}).save
+      Keyword.new({"group_id" => "group-1", "timestamp" => 1361494534, "word" => "日本", "source_id" => "source-2"}).save
     end
 
     it "should get trends when timestamp in the period" do
@@ -120,7 +120,7 @@ describe Group do
         "type" => "second",
         "time" => "2013-02-22T00:55:34",
         "words" => [
-          { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" },
+          { "word" => "日本", "count" => 1, "source" => "http://t.qq.com/t/source-2" },
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-1" }
         ]
       }, {
@@ -132,7 +132,7 @@ describe Group do
         "type" => "minute",
         "time" => "2013-02-22T00:55",
         "words" => [
-          { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" },
+          { "word" => "日本", "count" => 1, "source" => "http://t.qq.com/t/source-2" },
           { "word" => "中国", "count" => 1, "source" => "http://t.qq.com/t/source-1" }
         ]
       }, {
@@ -151,7 +151,7 @@ describe Group do
         "time" => "2013-02-22T00",
         "words" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
-          { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
+          { "word" => "日本", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       }, {
         "type" => "hour",
@@ -163,7 +163,7 @@ describe Group do
         "time" => "2013-02-22",
         "words" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
-          { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
+          { "word" => "日本", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       }])
       expect(subject.trends('month', 1359676800, 1359676800)).to eq([{
@@ -171,7 +171,7 @@ describe Group do
         "time" => "2013-02",
         "words" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
-          { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
+          { "word" => "日本", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       }])
       expect(subject.trends('year', 1356998400, 1356998400)).to eq([{
@@ -179,7 +179,7 @@ describe Group do
         "time" => "2013",
         "words" => [
           { "word" => "中国", "count" => 2, "source" => "http://t.qq.com/t/source-3" },
-          { "word" => "中间", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
+          { "word" => "日本", "count" => 1, "source" => "http://t.qq.com/t/source-2" }
         ]
       }])
     end
