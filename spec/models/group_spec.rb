@@ -195,8 +195,8 @@ describe Group do
       expect($redis.smembers("groups/group-1/users")).to be_include @user.key
     end
 
-    it "should assign group id to user hash" do
-      expect(@user["group_id"]).to eq "group-1"
+    it "should add group id to the user's group ids set" do
+      expect(@user.group_ids).to include('group-1')
     end
   end
 

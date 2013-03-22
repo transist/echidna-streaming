@@ -2,6 +2,10 @@
 require_relative 'base'
 require 'set'
 
+# Group schema:
+#   groups: Set of all group keys.
+#   groups/group-(\d+): A group hash, the "basename" part of the key is group id.
+#   groups/group-(\d+)/users: Set of all user keys in the group.
 class Group < Base
   GENDERS = {"Men" => "male", "Women" => "female", "Both" => "both"}
   AGE_RANGES = {'18-' => [1989, 1995], '24-' => [1978, 1989], '35-' => [1973, 1978], '40+' => [1900, 1973], 'All' => [1900, 1989]}
@@ -93,7 +97,7 @@ class Group < Base
   def add_user(user)
     $redis.multi do
       $redis.sadd users_key, user.key
-      $redis.hset user.key, "group_id", attributes['id']
+      $redis.sadd user.group_ids_key, @attributes['id']
     end
   end
 
