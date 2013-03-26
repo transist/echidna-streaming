@@ -18,6 +18,7 @@ class Group < Base
       start_birth_year, end_birth_year = AGE_RANGES[age_range]
       $redis.smembers(self.key).each do |group_key|
         group = Group.new_with_key(group_key, $redis.hgetall(group_key))
+        # TODO: factor out the birth year matching since we use it in a couple places
         if (group['gender'] == gender || group['gender'] == 'both') &&
            start_birth_year.to_i >= group['start_birth_year'].to_i && end_birth_year.to_i <= group['end_birth_year'].to_i && tier == group['tier_id']
           return group_key.split('/').last
@@ -31,6 +32,7 @@ class Group < Base
       group_ids.empty? ? ['group-other'] : group_ids
     end
 
+    # expensive operation: fetches and iterates through all group keys
     def find_tier_group(gender, birth_year, city)
       tier_id = City.new("name" => city)["tier_id"] || "tier-other"
       groups = []
@@ -82,6 +84,7 @@ class Group < Base
       end
       interval_trends["words"] = words
       trends << interval_trends
+      # TODO: rename interval_increment
       start_timestamp += interval_timestamp
     end
     trends
