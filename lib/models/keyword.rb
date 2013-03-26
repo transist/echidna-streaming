@@ -1,6 +1,8 @@
 # coding: utf-8
 require_relative 'base'
 
+# For now, we only record a single sample source_id per time scale
+# see https://github.com/transist/echidna-streaming/issues/36
 class Keyword < Base
   def save
     $redis.multi do
