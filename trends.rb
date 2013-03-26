@@ -43,6 +43,8 @@ class Trends < Goliath::API
       end
       [200, {}, response_body]
     end
+    # TODO: log error for else case of case
   end
 end
+# TODO: print a configuration object
 $logger.notice("streaming listen on #{streaming_ip}:#{streaming_port}")
