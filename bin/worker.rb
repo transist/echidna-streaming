@@ -33,6 +33,7 @@ while true
     result = Crontab.new("timestamp" => message["body"]["timestamp"], "group_id" => message["body"]["group_id"]).fetch_and_save
     $redis.lpush "api/messages/#{message['body']['group_id']}/trends", MultiJson.encode(result)
     $redis.ltrim "api/messages/#{message['body']['group_id']}/trends", 0, 999
+  # TODO: no checks for the default case (log error)
   end
   $redis.incr "streaming/messages/outgoing"
 end
