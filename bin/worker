@@ -11,12 +11,15 @@ while true
   raw_message = $redis.brpop "streaming/messages", 0
   $logger.notice("streaming receive message: #{raw_message.last.gsub('%', '%%')}")
   message = MultiJson.decode raw_message.last
+
   case message["type"]
   when "add_user"
     User.new(message["body"]).save
+
   when "add_user_to_group"
     user = User.new("id" => message["body"]["user_id"], "type" => message["body"]["user_type"])
     Group.new("id" => message["body"]["group_id"]).add_user(user)
+
   when "add_tweet"
     source = Source.new(message["body"])
     unless source.exist?
@@ -27,6 +30,7 @@ while true
         body: message["body"].slice("text", "timestamp").merge(group_ids: group_ids, source_id: message["body"]["id"])
       )
     end
+
   when "add_words"
     words = message["body"].delete("words")
     message['body'].delete('group_ids').each do |group_id|
@@ -39,5 +43,6 @@ while true
     end
   # TODO: no checks for the default case (log error)
   end
+
   $redis.incr "streaming/messages/outgoing"
 end
