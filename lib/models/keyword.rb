@@ -4,6 +4,24 @@ require_relative 'base'
 # For now, we only record a single sample source_id per time scale
 # see https://github.com/transist/echidna-streaming/issues/36
 class Keyword < Base
+  def self.calculate_z_scores(group_id, timestamp, limit = 100)
+    # Currently time scale is every 1 hour since we don't have enough data
+    time = Time.at(timestamp)
+    hour_timestamp = Timestamp.new(timestamp).to_hour
+
+    current_keywords = $redis.zrevrange "groups/#{group_id}/hour/#{hour_timestamp}/keywords", 0, limit - 1, with_scores: true
+    current_keywords.each do |keyword, count|
+      # Ruby doesn't allow iterate through reverse ordered Range so we start from negative number
+      historiacal_counts = (-10..-1).map do |n|
+        historiacal_hour_timestamp = (time + n.hours).to_i
+        score = $redis.zscore "groups/#{group_id}/hour/#{historiacal_hour_timestamp}/keywords", keyword
+      end
+
+      score = FAZScore.new(0.5, historiacal_counts).score(count)
+      $redis.zadd "groups/#{group_id}/hour/#{hour_timestamp}/z-scores", score, keyword
+    end
+  end
+
   def save
     $redis.multi do
       $redis.set second_source_id_key, @attributes['source_id']

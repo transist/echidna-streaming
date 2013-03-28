@@ -11,6 +11,8 @@ gem 'activesupport', require: [
   'active_support/core_ext/numeric/time',
   'active_support/core_ext/integer/time'
 ]
+gem 'rufus-scheduler'
+gem 'fazscore', git: 'git://github.com/transist/fazscore.git'
 
 gem 'goliath', require: false
 

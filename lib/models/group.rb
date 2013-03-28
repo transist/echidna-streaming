@@ -17,6 +17,12 @@ class Group < Base
       end
     end
 
+    def all_ids
+      $redis.smembers(self.key).map do |group_key|
+        group_key.split('/').last
+      end
+    end
+
     def find_tier_group_id(gender, age_range, tier)
       gender = GENDERS[gender]
       start_birth_year, end_birth_year = AGE_RANGES[age_range]

@@ -41,8 +41,14 @@ while true
       $redis.lpush "api/messages/#{group_id}/trends", MultiJson.encode(result)
       $redis.ltrim "api/messages/#{group_id}/trends", 0, 999
     end
-  # TODO: no checks for the default case (log error)
+
+  when 'calculate_z-scores'
+    Group.all_ids.each do |group_id|
+      Keyword.calculate_z_scores(group_id, message['body']['timestamp'])
+    end
   end
+
+  # TODO: no checks for the default case (log error)
 
   $redis.incr "streaming/messages/outgoing"
 end

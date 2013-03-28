@@ -25,6 +25,21 @@ class Trends < Goliath::API
       end_timestamp = Time.parse(params["end_time"]).to_i
       keywords = Group.new("id" => params["group_id"]).trends(params["interval"], start_timestamp, end_timestamp)
       [200, {}, MultiJson.encode(keywords)]
+
+    when '/z-scores'
+      hour_timestamp = 1.hour.ago(Time.parse(params['time'])).beginning_of_hour.to_i
+      limit = params['limit'].to_i
+      if params['group_id']
+        z_scores = $redis.zrevrange "groups/#{params['group_id']}/hour/#{hour_timestamp}/z-scores", 0, limit - 1, with_scores: true
+        [200, {}, MultiJson.dump({params['group_id'] => z_scores})]
+      else
+        z_scores_for_all_groups = Group.all_ids.map do |group_id|
+          z_scores = $redis.zrevrange "groups/#{group_id}/hour/#{hour_timestamp}/z-scores", 0, limit - 1, with_scores: true
+          z_scores.empty? ? nil : [group_id, z_scores]
+        end.compact
+        [200, {}, MultiJson.dump(Hash[z_scores_for_all_groups])]
+      end
+
     when "/tiers"
       tiers = Tier.all
       [200, {}, MultiJson.encode(tiers)]

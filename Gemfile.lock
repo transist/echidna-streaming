@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/transist/fazscore.git
+  revision: 3f1c34f59aac050f33a90a48e3087e27a8bdae03
+  specs:
+    fazscore (0.0.0)
+
 PATH
   remote: echidna-env
   specs:
@@ -70,7 +76,10 @@ GEM
     rspec-expectations (2.12.1)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.12.2)
+    rufus-scheduler (2.0.18)
+      tzinfo (>= 0.3.23)
     slop (3.4.3)
+    tzinfo (0.3.37)
     yajl-ruby (1.1.0)
 
 PLATFORMS
@@ -81,6 +90,7 @@ DEPENDENCIES
   awesome_print
   echidna-env!
   em-synchrony
+  fazscore!
   goliath
   multi_json
   pry
@@ -88,4 +98,5 @@ DEPENDENCIES
   pry-stack_explorer
   rmmseg-cpp
   rspec
+  rufus-scheduler
   yajl-ruby
