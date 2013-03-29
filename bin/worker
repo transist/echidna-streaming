@@ -43,13 +43,7 @@ while true
     end
 
   when 'calculate_z-scores'
-    time = Time.at(message['body']['timestamp'])
-    calculation_start_at = Time.now
-    Group.all_ids.each do |group_id|
-      $logger.notice %{Calculating z-scores for group "#{group_id}" time #{time}...}
-      Keyword.calculate_z_scores(group_id, message['body']['timestamp'])
-    end
-    $logger.notice %{Z-scores calculation for time #{time} done in #{Time.now - calculation_start_at} secs}
+    Keyword.calculate_z_scores_for_all_groups(message['body']['timestamp'])
   end
 
   # TODO: no checks for the default case (log error)

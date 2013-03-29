@@ -4,6 +4,17 @@ require_relative 'base'
 # For now, we only record a single sample source_id per time scale
 # see https://github.com/transist/echidna-streaming/issues/36
 class Keyword < Base
+  def self.calculate_z_scores_for_all_groups(timestamp, limit = 100)
+    time = Time.at(timestamp)
+    calculation_start_at = Time.now
+
+    Group.all_ids.each do |group_id|
+      $logger.notice %{Calculating z-scores for group "#{group_id}" time #{time}...}
+      Keyword.calculate_z_scores(group_id, timestamp, limit)
+    end
+    $logger.notice %{Z-scores calculation for time #{time} done in #{Time.now - calculation_start_at} secs}
+  end
+
   def self.calculate_z_scores(group_id, timestamp, limit = 100)
     # Currently time scale is every 1 hour since we don't have enough data
     time = Time.at(timestamp)
