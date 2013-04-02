@@ -187,16 +187,20 @@ describe Group do
 
   context "#add_user" do
     before do
-      @user = User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"})
-      Group.new({"id" => "group-1", "name" => "Group 1"}).add_user @user
+      @user1 = User.new({"id" => "1234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "f", "city" => "shanghai"})
+      @user2 = User.new({"id" => "2234567890", "type" => "tecent", "birth_year" => 2000, "gender" => "m", "city" => "shanghai"})
+      Group.new({"id" => "group-1", "name" => "Group 1"}).add_user @user1
+      Group.new({"id" => "group-1", "name" => "Group 1"}).add_user @user2
     end
 
     it "should add a user" do
-      expect($redis.smembers("groups/group-1/users")).to be_include @user.key
+      expect($redis.smembers("groups/group-1/users")).to be_include @user1.key
+      expect($redis.smembers("groups/group-1/users")).to be_include @user2.key
     end
 
     it "should add group id to the user's group ids set" do
-      expect(@user.group_ids).to include('group-1')
+      expect(@user1.group_ids).to include('group-1')
+      expect(@user2.group_ids).to include('group-1')
     end
   end
 
