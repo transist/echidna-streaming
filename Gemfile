@@ -16,6 +16,13 @@ gem 'goliath', require: false
 
 gem 'echidna-env', path: 'echidna-env', require: 'echidna/all'
 
+group :development, :test do
+  gem 'awesome_print'
+  gem 'pry'
+  gem 'pry-stack_explorer'
+  gem 'pry-nav'
+end
+
 group :test do
   gem 'rspec'
 end
