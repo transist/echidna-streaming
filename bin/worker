@@ -43,7 +43,7 @@ while true
     end
 
   when 'calculate_z-scores'
-    Keyword.calculate_z_scores_for_all_groups(message['body']['timestamp'])
+    Keyword.calculate_z_scores_for_all_groups(message['body']['timestamp'], message['body']['interval'])
   end
 
   # TODO: no checks for the default case (log error)

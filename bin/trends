@@ -27,14 +27,19 @@ class Trends < Goliath::API
       [200, {}, MultiJson.encode(keywords)]
 
     when '/z-scores'
-      hour_timestamp = 1.hour.ago(Time.parse(params['time'])).beginning_of_hour.to_i
+      interval = params['interval'].to_s
+      unless %w(minute hour day year).include?(interval)
+        return [400, {}, MultiJson.dump(error: 'Invalid interval, must be one of "minute", "hour", "day" and "year".')]
+      end
+
+      timestamp = 1.send(interval).ago(Time.parse(params['time']).utc).send("beginning_of_#{interval}").to_i
       limit = params['limit'].to_i
       if params['group_id']
-        z_scores = $redis.zrevrange "groups/#{params['group_id']}/hour/#{hour_timestamp}/z-scores", 0, limit - 1, with_scores: true
+        z_scores = $redis.zrevrange "groups/#{params['group_id']}/#{interval}/#{timestamp}/z-scores", 0, limit - 1, with_scores: true
         [200, {}, MultiJson.dump({params['group_id'] => z_scores})]
       else
         z_scores_for_all_groups = Group.all_ids.map do |group_id|
-          z_scores = $redis.zrevrange "groups/#{group_id}/hour/#{hour_timestamp}/z-scores", 0, limit - 1, with_scores: true
+          z_scores = $redis.zrevrange "groups/#{group_id}/#{interval}/#{timestamp}/z-scores", 0, limit - 1, with_scores: true
           z_scores.empty? ? nil : [group_id, z_scores]
         end.compact
         [200, {}, MultiJson.dump(Hash[z_scores_for_all_groups])]

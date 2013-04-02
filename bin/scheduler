@@ -12,7 +12,10 @@ scheduler = Rufus::Scheduler.start_new
 scheduler.cron '5 * * * *', blocking: true do
   $redis.lpush 'streaming/messages', MultiJson.dump({
     type: 'calculate_z-scores',
-    body: { timestamp: 1.hour.ago.beginning_of_hour.to_i }
+    body: {
+      timestamp: 1.hour.ago.beginning_of_hour.to_i,
+      interval: 'hour'
+    }
   })
 end
 
