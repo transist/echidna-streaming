@@ -69,6 +69,15 @@ class Group < Base
       end
       groups
     end
+
+    def z_scores(interval, timestamp, limit = 100)
+      timestamp = Timestamp.new(timestamp).send("to_#{interval}")
+      z_scores = Group.all_ids.map do |group_id|
+        z_scores = $redis.zrevrange("groups/#{group_id}/#{interval}/#{timestamp}/z-scores", 0, limit - 1, with_scores: true)
+        z_scores.empty? ? nil : [group_id, z_scores]
+      end.compact
+      Hash[z_scores]
+    end
   end
 
   def save
@@ -98,6 +107,11 @@ class Group < Base
       start_timestamp += interval_timestamp
     end
     trends
+  end
+
+  def z_scores(interval, timestamp, limit = 100)
+    timestamp = Timestamp.new(timestamp).send("to_#{interval}")
+    $redis.zrevrange("groups/#{@attributes['id']}/#{interval}/#{timestamp}/z-scores", 0, limit - 1, with_scores: true)
   end
 
   def add_user(user)

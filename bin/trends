@@ -32,17 +32,14 @@ class Trends < Goliath::API
         return [400, {}, MultiJson.dump(error: 'Invalid interval, must be one of "minute", "hour", "day" and "year".')]
       end
 
-      timestamp = 1.send(interval).ago(Time.parse(params['time']).utc).send("beginning_of_#{interval}").to_i
+      timestamp = Time.parse(params['time']).to_i
       limit = params['limit'].to_i
       if params['group_id']
-        z_scores = $redis.zrevrange "groups/#{params['group_id']}/#{interval}/#{timestamp}/z-scores", 0, limit - 1, with_scores: true
+        z_scores = Group.new('id' => params['group_id']).z_scores(interval, timestamp)
         [200, {}, MultiJson.dump({params['group_id'] => z_scores})]
       else
-        z_scores_for_all_groups = Group.all_ids.map do |group_id|
-          z_scores = $redis.zrevrange "groups/#{group_id}/#{interval}/#{timestamp}/z-scores", 0, limit - 1, with_scores: true
-          z_scores.empty? ? nil : [group_id, z_scores]
-        end.compact
-        [200, {}, MultiJson.dump(Hash[z_scores_for_all_groups])]
+        z_scores = Group.z_scores(interval, timestamp)
+        [200, {}, MultiJson.dump(z_scores)]
       end
 
     when "/tiers"
