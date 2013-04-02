@@ -73,7 +73,14 @@ class Group < Base
     def z_scores(interval, timestamp, limit = 100)
       timestamp = Timestamp.new(timestamp).send("to_#{interval}")
       z_scores = Group.all_ids.map do |group_id|
-        z_scores = $redis.zrevrange("groups/#{group_id}/#{interval}/#{timestamp}/z-scores", 0, limit - 1, with_scores: true)
+        z_scores_key = "groups/#{group_id}/#{interval}/#{timestamp}/z-scores"
+
+        # OPTIMIZE Calculate z-scores on demand would break the realtime reponse
+        # when we have huge set of data, it's just for handy development for now.
+        unless $redis.exists(z_scores_key)
+          Keyword.calculate_z_scores(group_id, timestamp, interval, limit)
+        end
+        z_scores = $redis.zrevrange(z_scores_key, 0, limit - 1, with_scores: true)
         z_scores.empty? ? nil : [group_id, z_scores]
       end.compact
       Hash[z_scores]
@@ -111,7 +118,14 @@ class Group < Base
 
   def z_scores(interval, timestamp, limit = 100)
     timestamp = Timestamp.new(timestamp).send("to_#{interval}")
-    $redis.zrevrange("groups/#{@attributes['id']}/#{interval}/#{timestamp}/z-scores", 0, limit - 1, with_scores: true)
+    z_scores_key = "groups/#{@attributes['id']}/#{interval}/#{timestamp}/z-scores"
+
+    # OPTIMIZE Calculate z-scores on demand would break the realtime reponse
+    # when we have huge set of data, it's just for handy development for now.
+    unless $redis.exists(z_scores_key)
+      Keyword.calculate_z_scores(@attributes['id'], timestamp, interval, limit)
+    end
+    $redis.zrevrange(z_scores_key, 0, limit - 1, with_scores: true)
   end
 
   def add_user(user)
