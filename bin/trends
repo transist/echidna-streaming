@@ -28,8 +28,8 @@ class Trends < Goliath::API
 
     when '/z-scores'
       interval = params['interval'].to_s
-      unless %w(minute hour day year).include?(interval)
-        return [400, {}, MultiJson.dump(error: 'Invalid interval, must be one of "minute", "hour", "day" and "year".')]
+      unless %w(minute hour day month year).include?(interval)
+        return [400, {}, MultiJson.dump(error: 'Invalid interval, must be one of "minute", "hour", "day", "month" and "year".')]
       end
 
       timestamp = Time.parse(params['time']).to_i
