@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+ENV['ECHIDNA_ENV'] ||= "development"
+
+require 'bundler'
+Bundler.require(:default, ENV['ECHIDNA_ENV'])
+
+require 'rufus/scheduler'
+
+scheduler = Rufus::Scheduler.start_new
+
+scheduler.cron '5 * * * *', blocking: true do
+  $redis.lpush 'streaming/messages', MultiJson.dump({
+    type: 'calculate_z-scores',
+    body: {
+      timestamp: 1.hour.ago.beginning_of_hour.to_i,
+      interval: 'hour'
+    }
+  })
+end
+
+scheduler.join

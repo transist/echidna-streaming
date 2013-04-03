@@ -2,6 +2,10 @@
 require_relative 'base'
 require 'set'
 
+# Group schema:
+#   groups: Set of all group keys.
+#   groups/group-(\d+): A group hash, the "basename" part of the key is group id.
+#   groups/group-(\d+)/users: Set of all user keys in the group.
 class Group < Base
   GENDERS = {"Men" => "male", "Women" => "female", "Both" => "both"}
   AGE_RANGES = {'18-' => [1989, 1995], '24-' => [1978, 1989], '35-' => [1973, 1978], '40+' => [1900, 1973], 'All' => [1900, 1989]}
@@ -10,6 +14,12 @@ class Group < Base
     def all
       $redis.smembers(self.key).map do |group_key|
         $redis.hgetall(group_key).merge("id" => group_key.split('/').last)
+      end
+    end
+
+    def all_ids
+      $redis.smembers(self.key).map do |group_key|
+        group_key.split('/').last
       end
     end
 
@@ -59,6 +69,22 @@ class Group < Base
       end
       groups
     end
+
+    def z_scores(interval, timestamp, limit = 100)
+      timestamp = Timestamp.new(timestamp).send("to_#{interval}")
+      z_scores = Group.all_ids.map do |group_id|
+        z_scores_key = "groups/#{group_id}/#{interval}/#{timestamp}/z-scores"
+
+        # OPTIMIZE Calculate z-scores on demand would break the realtime reponse
+        # when we have huge set of data, it's just for handy development for now.
+        unless $redis.exists(z_scores_key)
+          Keyword.calculate_z_scores(group_id, timestamp, interval, limit)
+        end
+        z_scores = $redis.zrevrange(z_scores_key, 0, limit - 1, with_scores: true)
+        z_scores.empty? ? nil : [group_id, z_scores]
+      end.compact
+      Hash[z_scores]
+    end
   end
 
   def save
@@ -90,10 +116,22 @@ class Group < Base
     trends
   end
 
+  def z_scores(interval, timestamp, limit = 100)
+    timestamp = Timestamp.new(timestamp).send("to_#{interval}")
+    z_scores_key = "groups/#{@attributes['id']}/#{interval}/#{timestamp}/z-scores"
+
+    # OPTIMIZE Calculate z-scores on demand would break the realtime reponse
+    # when we have huge set of data, it's just for handy development for now.
+    unless $redis.exists(z_scores_key)
+      Keyword.calculate_z_scores(@attributes['id'], timestamp, interval, limit)
+    end
+    $redis.zrevrange(z_scores_key, 0, limit - 1, with_scores: true)
+  end
+
   def add_user(user)
     $redis.multi do
       $redis.sadd users_key, user.key
-      $redis.hset user.key, "group_id", attributes['id']
+      $redis.sadd user.group_ids_key, @attributes['id']
     end
   end
 

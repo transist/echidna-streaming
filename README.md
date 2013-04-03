@@ -23,7 +23,7 @@ brew install redis
 start worker
 
 ```bash
-ECHIDNA_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 ruby bin/worker.rb
+bin/worker
 ```
 
 add a user
@@ -61,7 +61,7 @@ ECHIDNA_ENV=development ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379 rub
 Start trends server
 
 ```bash
-ECHIDNA_ENV=development ECHIDNA_STREAMING_IP=0.0.0.0 ECHIDNA_STREAMING_PORT=9000 ECHIDNA_REDIS_HOST=127.0.0.1 ECHIDNA_REDIS_PORT=6379  ECHIDNA_STREAMING_DAEMON=true ruby trends.rb
+bin/trends
 ```
 
 ## APIs

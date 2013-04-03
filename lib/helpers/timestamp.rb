@@ -1,4 +1,6 @@
 class Timestamp
+  attr_reader :time
+
   def initialize(timestamp)
     @time = Time.at(timestamp).utc
   end
@@ -17,6 +19,10 @@ class Timestamp
 
   def to_day
     @time.beginning_of_day.to_i
+  end
+
+  def to_week
+    @time.beginning_of_week
   end
 
   def to_month
