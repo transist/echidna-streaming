@@ -1,4 +1,5 @@
-# coding: utf-8
+#!/usr/bin/env ruby
+
 require 'bundler'
 Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 
@@ -10,30 +11,42 @@ while true
   raw_message = $redis.brpop "streaming/messages", 0
   $logger.notice("streaming receive message: #{raw_message.last.gsub('%', '%%')}")
   message = MultiJson.decode raw_message.last
+
   case message["type"]
   when "add_user"
     User.new(message["body"]).save
+
   when "add_user_to_group"
     user = User.new("id" => message["body"]["user_id"], "type" => message["body"]["user_type"])
     Group.new("id" => message["body"]["group_id"]).add_user(user)
+
   when "add_tweet"
     source = Source.new(message["body"])
     unless source.exist?
       source.save
-      group_id = User.new("id" => message["body"]["user_id"], "type" => message["body"]["user_type"])['group_id']
+      group_ids = User.new("id" => message["body"]["user_id"], "type" => message["body"]["user_type"]).group_ids
       $redis.lpush "dicts/messages", MultiJson.encode(
         type: "segment",
-        body: message["body"].slice("text", "timestamp").merge(group_id: group_id, source_id: message["body"]["id"])
+        body: message["body"].slice("text", "timestamp").merge(group_ids: group_ids, source_id: message["body"]["id"])
       )
     end
+
   when "add_words"
-    message["body"].delete("words").each do |word|
-      Keyword.new(message["body"].merge("word" => word)).save
+    words = message["body"].delete("words")
+    message['body'].delete('group_ids').each do |group_id|
+      words.each do |word|
+        Keyword.new(message["body"].merge("word" => word, 'group_id' => group_id)).save
+      end
+      result = Crontab.new("timestamp" => message["body"]["timestamp"], "group_id" => group_id).fetch_and_save
+      $redis.lpush "api/messages/#{group_id}/trends", MultiJson.encode(result)
+      $redis.ltrim "api/messages/#{group_id}/trends", 0, 999
     end
-    result = Crontab.new("timestamp" => message["body"]["timestamp"], "group_id" => message["body"]["group_id"]).fetch_and_save
-    $redis.lpush "api/messages/#{message['body']['group_id']}/trends", MultiJson.encode(result)
-    $redis.ltrim "api/messages/#{message['body']['group_id']}/trends", 0, 999
-  # TODO: no checks for the default case (log error)
+
+  when 'calculate_z-scores'
+    Keyword.calculate_z_scores_for_all_groups(message['body']['timestamp'], message['body']['interval'])
   end
+
+  # TODO: no checks for the default case (log error)
+
   $redis.incr "streaming/messages/outgoing"
 end

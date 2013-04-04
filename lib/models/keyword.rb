@@ -4,6 +4,34 @@ require_relative 'base'
 # For now, we only record a single sample source_id per time scale
 # see https://github.com/transist/echidna-streaming/issues/36
 class Keyword < Base
+  def self.calculate_z_scores_for_all_groups(timestamp, interval, limit = 100)
+    time = Time.at(timestamp)
+    calculation_start_at = Time.now
+
+    Group.all_ids.each do |group_id|
+      Keyword.calculate_z_scores(group_id, timestamp, interval, limit)
+    end
+    $logger.notice %{Z-scores calculation for time #{time} done in #{Time.now - calculation_start_at} secs}
+  end
+
+  # TODO: add support for interval "week" when saving keyword
+  def self.calculate_z_scores(group_id, timestamp, interval, limit = 100)
+    beginning_of_interval = Timestamp.new(timestamp).time
+    timestamp = beginning_of_interval.to_i
+
+    current_keywords = $redis.zrevrange "groups/#{group_id}/#{interval}/#{timestamp}/keywords", 0, limit - 1, with_scores: true
+    current_keywords.each do |keyword, count|
+      # Ruby doesn't allow iterate through reverse ordered Range so we start from negative number
+      historiacal_counts = (-10..-1).map do |n|
+        historiacal_timestamp = (beginning_of_interval + n.send(interval)).to_i
+        score = $redis.zscore "groups/#{group_id}/#{interval}/#{historiacal_timestamp}/keywords", keyword
+      end
+
+      score = FAZScore.new(0.5, historiacal_counts).score(count)
+      $redis.zadd "groups/#{group_id}/#{interval}/#{timestamp}/z-scores", score, keyword
+    end
+  end
+
   def save
     $redis.multi do
       $redis.set second_source_id_key, @attributes['source_id']

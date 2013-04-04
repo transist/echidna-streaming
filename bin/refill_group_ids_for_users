@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require 'bundler'
+Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
+
+# This script intent to fix the data integrity issue of group_ids for all users.
+
+Group.all.each do |group_attrs|
+  group = Group.new(group_attrs)
+  $redis.smembers(group.users_key).each do |user_key|
+    group_ids_key = "#{user_key}/group_ids"
+    puts "#{group_ids_key} => #{group_attrs['id']}"
+    $redis.sadd group_ids_key, group_attrs['id']
+  end
+end

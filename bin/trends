@@ -1,4 +1,5 @@
-# coding: utf-8
+#!/usr/bin/env ruby
+
 echidna_env = ENV['ECHIDNA_ENV'] || "development"
 
 require 'bundler'
@@ -9,7 +10,7 @@ streaming_ip = ENV['ECHIDNA_STREAMING_IP'] || "0.0.0.0"
 streaming_port = app_port('streaming')
 streaming_daemon = ENV['ECHIDNA_STREAMING_DAEMON'] == "true"
 
-ARGV.replace ["-e", echidna_env, "-a", streaming_ip, "-p", streaming_port]
+ARGV.replace ARGV + ["-e", echidna_env, "-a", streaming_ip, "-p", streaming_port]
 ARGV << "-d" if streaming_daemon
 ARGV << '-sv' if echidna_env == 'development'
 
@@ -24,6 +25,23 @@ class Trends < Goliath::API
       end_timestamp = Time.parse(params["end_time"]).to_i
       keywords = Group.new("id" => params["group_id"]).trends(params["interval"], start_timestamp, end_timestamp)
       [200, {}, MultiJson.encode(keywords)]
+
+    when '/z-scores'
+      interval = params['interval'].to_s
+      unless %w(minute hour day month year).include?(interval)
+        return [400, {}, MultiJson.dump(error: 'Invalid interval, must be one of "minute", "hour", "day", "month" and "year".')]
+      end
+
+      timestamp = Time.parse(params['time']).to_i
+      limit = params['limit'].to_i
+      if params['group_id']
+        z_scores = Group.new('id' => params['group_id']).z_scores(interval, timestamp)
+        [200, {}, MultiJson.dump({params['group_id'] => z_scores})]
+      else
+        z_scores = Group.z_scores(interval, timestamp)
+        [200, {}, MultiJson.dump(z_scores)]
+      end
+
     when "/tiers"
       tiers = Tier.all
       [200, {}, MultiJson.encode(tiers)]
