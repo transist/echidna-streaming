@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+require 'bundler'
+Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
+
+# This script intent to fix the group data.
+
+puts 'Truncating corrupted data...'
+
+%w(city* groups* sources* tiers*).each do |pattern|
+  $redis.keys(pattern).each do |key|
+    $redis.del key
+  end
+end
+
+system 'ruby ' + File.expand_path('../init_groups.rb', __FILE__)
+
+puts 'Re-adding users to groups...'
+
+$redis.keys('users/*').each do |key|
+  _, user_type, user_id, is_group_ids_key = key.split('/')
+
+  # Skip user group ids
+  next if is_group_ids_key
+
+  user_hash = $redis.hgetall(key)
+  user = User.new('id' => user_id, 'type' => user_type)
+
+  # Ensure cache format compatible with trends
+  cache_key = "cache/#{user_hash.slice('gender', 'birth_year', 'city').values.join('/')}/group_ids"
+
+  response_body = $cacher.fetch(cache_key, :expires_in => 86400) do
+    group_ids = Group.find_group_ids(user_hash['gender'], user_hash['birth_year'], user_hash['city'])
+    MultiJson.encode('ids' => group_ids)
+  end
+
+  MultiJson.load(response_body)['ids'].each do |group_id|
+    $redis.del user.group_ids_key
+    Group.new('id' => group_id).add_user(user)
+  end
+end
