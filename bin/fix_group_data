@@ -5,6 +5,14 @@ Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 
 # This script intent to fix the group data.
 
+$redis = Redis::Namespace.new(
+  ENV['ECHIDNA_REDIS_NAMESPACE'],
+  redis: Redis.new(
+    host: ENV['ECHIDNA_REDIS_HOST'], port: ENV['ECHIDNA_REDIS_PORT'], driver: :hiredis,
+    timeout: 30.minutes
+  )
+)
+
 puts 'Truncating corrupted data, cache, and messages...'
 
 %w(city* groups* sources* tiers* cache/* streaming/messages dicts/messages).each do |pattern|
