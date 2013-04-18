@@ -5,9 +5,9 @@ Bundler.require(:default, ENV['ECHIDNA_ENV'] || "development")
 
 # This script intent to fix the group data.
 
-puts 'Truncating corrupted data...'
+puts 'Truncating corrupted data, cache, and messages...'
 
-%w(city* groups* sources* tiers*).each do |pattern|
+%w(city* groups* sources* tiers* cache/* streaming/messages dicts/messages).each do |pattern|
   $redis.keys(pattern).each do |key|
     $redis.del key
   end
