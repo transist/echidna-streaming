@@ -2,4 +2,4 @@
 source $HOME/.rvm/scripts/rvm
 cd `pwd`
 echo $ECHIDNA_ENV
-bin/trends
+"$PWD/bin/trends"
